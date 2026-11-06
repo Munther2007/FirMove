@@ -18,9 +18,9 @@ header{position:sticky;top:0;z-index:20;display:flex;gap:14px;align-items:center
 .btn{background:var(--gold);color:#241a05;border:0;border-radius:8px;padding:8px 18px;font-weight:600;cursor:pointer}
 .btn.alt{background:transparent;color:var(--text);border:1px solid var(--line)}
 .btn.danger{background:var(--rose);color:#fff}
-.hero{padding:12vh 5vw 5vh;min-height:44vh;display:flex;flex-direction:column;justify-content:flex-end;background-size:cover;background-position:center;margin-bottom:18px}.hero[hidden]{display:none}
+.hero{padding:7vh 5vw 4vh;max-width:900px}
 .hero h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.25;font-weight:700}
-.hero p{color:var(--text);opacity:.8;margin:10px 0 18px;max-width:56ch;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.hero h1{max-width:22ch}
+.hero p{color:var(--mute);margin:12px 0 20px;max-width:56ch}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;padding:0 5vw 18px}
 .tab{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 18px;cursor:pointer}
 .tab[aria-pressed=true]{background:var(--gold);color:#241a05;border-color:var(--gold);font-weight:600}
@@ -45,17 +45,6 @@ input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--lin
 .actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
 .msg{margin-top:10px;color:var(--gold);min-height:1.4em;font-size:.9rem}
 .banner{background:#2b2140;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:0 5vw 18px;color:var(--mute);font-size:.9rem}
-.strip{display:flex;gap:14px;overflow-x:auto;padding-bottom:10px;scroll-snap-type:x proximity}
-.strip .card{flex:0 0 150px;scroll-snap-align:start}
-.rowsec{margin-bottom:24px}.rowsec h3{margin-bottom:10px;font-size:1.1rem}
-.poster{position:relative;overflow:hidden}
-.badge{position:absolute;top:8px;inset-inline-start:8px;background:rgba(21,17,31,.78);border-radius:6px;padding:0 8px;font-size:.72rem;font-weight:400}
-.play{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:2rem;background:rgba(21,17,31,.5);opacity:0}
-.card:hover .play,.card:focus-visible .play{opacity:1}
-.card .meta small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sk{aspect-ratio:2/3;border-radius:10px;background:var(--card)}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--gold);padding:10px 18px;border-radius:10px;z-index:90;max-width:90vw}
-@media (prefers-reduced-motion:no-preference){.sk{animation:pulse 1.2s ease-in-out infinite}@keyframes pulse{50%{opacity:.5}}.play{transition:opacity .15s}}
 .side{position:fixed;top:0;bottom:0;right:0;width:280px;max-width:84vw;background:var(--card);border-left:1px solid var(--line);z-index:40;transform:translateX(105%);padding:16px 12px;overflow:auto;display:flex;flex-direction:column;gap:2px}
 .side.open{transform:none}
 .scrim{position:fixed;inset:0;background:rgba(8,6,14,.6);z-index:35;display:none}.scrim.open{display:block}
@@ -84,11 +73,15 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
   <span id="userBox"></span>
 </header>
 
-<section class="hero" id="hero" hidden></section>
+<section class="hero">
+  <h1>شاهد أفلامك ومسلسلاتك، وارفع محتواك الخاص</h1>
+  <p>أنشئ حسابًا مجانيًا لتتمكن من رفع الأفلام والمسلسلات ومشاركتها مع الجميع.</p>
+  <button class="btn" id="heroUpload">ارفع فيلمًا أو مسلسلًا</button>
+</section>
 
 <div class="banner" id="demoBanner" hidden>وضع التجربة المحلي: الحسابات والملفات محفوظة في هذا المتصفح فقط، وأول حساب تنشئه يصبح مديرًا. لقاعدة بيانات حقيقية أضف إعدادات Supabase في config.js.</div>
 
-<main><h2 id="secTitle" style="margin:0 0 6px">كل الأعمال</h2><p id="secNote" style="color:var(--mute);margin-bottom:14px"></p><div id="grid"></div></main>
+<main><h2 id="secTitle" style="margin:0 0 6px">كل الأعمال</h2><p id="secNote" style="color:var(--mute);margin-bottom:14px"></p><div class="grid" id="grid"></div></main>
 
 <div class="scrim" id="scrim"></div>
 <nav class="side" id="side" aria-label="القائمة الرئيسية">
@@ -128,7 +121,7 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
   <p id="pMeta" style="color:var(--mute)"></p>
   <p id="pDesc" style="margin-top:8px"></p>
   <div class="eps" id="epList"></div>
-  <div class="actions"><button class="btn" id="dlOne">تنزيل</button><button class="btn" id="dlAll" hidden>تنزيل المسلسل كامل</button><button class="btn alt" data-close>إغلاق</button><button class="btn alt" id="editBtn" hidden>تعديل</button><button class="btn danger" id="delBtn" hidden>حذف</button></div>
+  <div class="actions"><button class="btn" id="dlOne">تنزيل</button><button class="btn" id="dlAll" hidden>تنزيل المسلسل كامل</button><button class="btn alt" data-close>إغلاق</button><button class="btn danger" id="delBtn" hidden>حذف</button></div>
 </div></div>
 
 <!-- نافذة الحساب -->
@@ -163,25 +156,6 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
   <div class="actions"><button class="btn" id="upGo">رفع</button><button class="btn alt" data-close>إلغاء</button></div>
 </div></div>
 
-<div class="modal" id="editModal" role="dialog" aria-modal="true"><div class="box">
-  <h2>تعديل العمل</h2>
-  <label for="eTitle">العنوان</label><input id="eTitle">
-  <div class="row">
-    <div><label for="eType">النوع</label><select id="eType"><option value="movie">فيلم</option><option value="series">مسلسل</option><option value="short">مقطع قصير</option><option value="quran">قرآن</option></select></div>
-    <div><label for="eGenre">التصنيف</label><input id="eGenre"></div>
-    <div><label for="eYear">السنة</label><input id="eYear" type="number" min="1900" max="2100"></div>
-  </div>
-  <div class="row" id="eEpRow" hidden>
-    <div><label for="eSeason">رقم الموسم</label><input id="eSeason" type="number" min="1"></div>
-    <div><label for="eEp">رقم الحلقة</label><input id="eEp" type="number" min="1"></div>
-  </div>
-  <label for="eDesc">الوصف</label><textarea id="eDesc" rows="3"></textarea>
-  <label for="ePoster">تغيير صورة الخلفية (اختياري)</label><input id="ePoster" type="file" accept="image/*">
-  <label style="display:flex;gap:8px;align-items:center"><input id="eRmPoster" type="checkbox" style="width:auto"> حذف الصورة الحالية</label>
-  <div class="msg" id="eMsg"></div>
-  <div class="actions"><button class="btn" id="eGo">حفظ التعديلات</button><button class="btn alt" data-close>إلغاء</button></div>
-</div></div>
-
 <div class="modal" id="admModal" role="dialog" aria-modal="true"><div class="box">
   <h2>لوحة المدير</h2>
   <div class="row" id="stats"></div>
@@ -198,8 +172,6 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const cfg = window.SITE_CONFIG || {};
 const cloud = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase);
 const live = true;
-const dev = !cloud && /^(localhost|127\.0\.0\.1|\[::1\])?$/.test(location.hostname);   // تجربة محلية فقط
-const setupMode = !cloud && !dev;   // موقع منشور بدون ربط قاعدة البيانات: الحسابات والرفع متوقفة
 const sb = cloud ? supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY) : localSb();
 const BUCKET = 'media';
 
@@ -220,34 +192,20 @@ function posterStyle(it, i){
   const h = HUES[i % HUES.length];
   return `background-image:linear-gradient(160deg,hsl(${h} 55% 32%),hsl(${(h+50)%360} 60% 14%))`;
 }
-function cardHTML(it,i){
-  const sub = [it.type==='series' && it.season ? `م${it.season} ح${it.episode}` : '', it.genre, it.year].filter(Boolean).map(esc).join(' • ');
-  return `<button class="card" data-id="${esc(it.id)}"><div class="poster" style="${posterStyle(it,i)}">${it.poster_url?'':`<span>${esc(it.title)}</span>`}<i class="play">▶</i><b class="badge">${esc(TL[it.type]||'فيلم')}</b></div><div class="meta"><h3>${esc(it.title)}</h3><small>${sub||'&nbsp;'}</small></div></button>`;
-}
-function renderHero(it){
-  const h = $('#hero'); h.hidden = !it; if (!it) return;
-  const img = it.poster_url ? `url("${it.poster_url.replace(/["\\]/g,'')}")` : `linear-gradient(135deg,hsl(${HUES[0]} 55% 28%),hsl(${HUES[1]} 60% 14%))`;
-  h.style.backgroundImage = `linear-gradient(0deg,#15111f 6%,rgba(21,17,31,.35)),${img}`;
-  h.innerHTML = `<h1>${esc(it.title)}</h1><p>${esc(it.description||'')}</p><div class="actions" style="margin:0"><button class="btn" data-ep="${esc(it.id)}">▶ شاهد الآن</button><button class="btn alt" id="heroUpload">ارفع عملًا</button></div>`;
-}
 function render(){
-  const q = $('#q').value.trim().toLowerCase(), home = filter==='all' && !q;
+  const q = $('#q').value.trim().toLowerCase();
   const list = items.filter(i => (filter==='all'||i.type===filter) && (!q || (i.title+' '+(i.genre||'')).toLowerCase().includes(q)));
-  renderHero(home ? items[0] : null);
-  let html;
-  if (!list.length) html = '<p class="empty">لا توجد أعمال هنا بعد. سجّل الدخول وارفع أول عمل.</p>';
-  else if (home) html = ['movie','series','short','quran'].map(t => { const l = list.filter(i => i.type===t); return l.length ? `<section class="rowsec"><h3>${SEC[t]}</h3><div class="strip">${l.map(cardHTML).join('')}</div></section>` : ''; }).join('');
-  else html = `<div class="grid">${list.map(cardHTML).join('')}</div>`;
-  $('#grid').innerHTML = html;
+  $('#grid').innerHTML = list.length ? list.map((it,i)=>`
+    <button class="card" data-id="${esc(it.id)}">
+      <div class="poster" style="${posterStyle(it,i)}">${it.poster_url?'':esc(it.title)}</div>
+      <div class="meta"><h3>${esc(it.title)}</h3>
+      <small>${it.type==='series'?`مسلسل${it.season?` – م${esc(it.season)} ح${esc(it.episode)}`:''}`:(TL[it.type]||'فيلم')}${it.year?' • '+esc(it.year):''}</small></div>
+    </button>`).join('') : '<p class="empty">لا توجد نتائج. جرّب كلمة بحث أخرى أو ارفع أول عمل.</p>';
 }
 async function load(){
-  $('#grid').innerHTML = '<div class="grid">' + '<div class="sk"></div>'.repeat(8) + '</div>';
-  const b = $('#demoBanner');
-  b.textContent = setupMode ? 'الموقع قيد الإعداد: لم يُربط بقاعدة البيانات بعد، لذلك الحسابات والرفع متوقفة مؤقتًا.' : 'وضع التجربة المحلي على جهازك: الحسابات والملفات محفوظة في هذا المتصفح فقط.';
-  b.hidden = !dev;
-  if (setupMode){ items = DEMO; return render(); }
   const {data, error} = await sb.from('videos').select('*').order('created_at',{ascending:false}).limit(300);
-  items = (cloud ? [] : DEMO).concat(error ? [] : data); render();
+  items = (cloud ? [] : DEMO).concat(error ? [] : data);
+  $('#demoBanner').hidden = cloud; render();
 }
 function renderUser(){
   $('#userBox').innerHTML = user ? '<button class="btn" id="upBtn">رفع</button>' : '<button class="btn" id="inBtn">تسجيل الدخول</button>';
@@ -300,37 +258,6 @@ function openProfile(){
   open('#profModal');
 }
 const closeSide = () => { $('#side').classList.remove('open'); $('#scrim').classList.remove('open'); };
-let editing = null;
-function openEdit(it){
-  if (!it) return;
-  editing = it;
-  document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'));
-  $('#eTitle').value = it.title || ''; $('#eDesc').value = it.description || ''; $('#eGenre').value = it.genre || ''; $('#eYear').value = it.year || '';
-  $('#eType').value = it.type; $('#eSeason').value = it.season || 1; $('#eEp').value = it.episode || 1;
-  $('#ePoster').value = ''; $('#eRmPoster').checked = false; $('#eEpRow').hidden = it.type !== 'series'; $('#eMsg').textContent = '';
-  open('#editModal');
-}
-$('#eType').addEventListener('change', e => $('#eEpRow').hidden = e.target.value !== 'series');
-$('#eGo').onclick = async () => {
-  const it = editing, msg = $('#eMsg'), title = $('#eTitle').value.trim();
-  if (!isAdmin || !it) return;
-  if (!title) return msg.textContent = 'العنوان مطلوب.';
-  $('#eGo').disabled = true; msg.textContent = 'جارٍ الحفظ...';
-  try {
-    const isS = $('#eType').value === 'series';
-    const upd = {title, description:$('#eDesc').value.trim(), genre:$('#eGenre').value.trim(), year:+$('#eYear').value || null, type:$('#eType').value, season:isS ? +$('#eSeason').value : null, episode:isS ? +$('#eEp').value : null};
-    const f = $('#ePoster').files[0]; let oldPath = null;
-    if (f){
-      const path = `${user.id}/${Date.now()}-${f.name.replace(/[^\w.\-]/g,'_')}`;
-      const {error} = await sb.storage.from(BUCKET).upload(path, f); if (error) throw error;
-      upd.poster_url = sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl; upd.poster_path = path; oldPath = it.poster_path;
-    } else if ($('#eRmPoster').checked){ upd.poster_url = null; upd.poster_path = null; oldPath = it.poster_path; }
-    const {error} = await sb.from('videos').update(upd).eq('id', it.id); if (error) throw error;
-    if (oldPath) await sb.storage.from(BUCKET).remove([oldPath]);
-    close($('#editModal')); toast('تم حفظ التعديلات.'); await load();
-  } catch(e){ msg.textContent = 'تعذّر الحفظ: ' + (e.message || e); }
-  $('#eGo').disabled = false;
-};
 async function removeItem(it){
   const paths = [it.video_path, it.poster_path].filter(Boolean);
   const {error} = await sb.from('videos').delete().eq('id', it.id);
@@ -345,7 +272,7 @@ async function openAdmin(){
   else { try { users = JSON.parse(localStorage.getItem('cc_users')||'[]'); } catch {} }
   const st = [['الأعمال',vids.length],['الأفلام',vids.filter(v=>v.type==='movie').length],['المسلسلات',vids.filter(v=>v.type==='series').length],['المستخدمون',users.length]];
   $('#stats').innerHTML = st.map(([a,b])=>`<div class="stat"><b>${b}</b><br><small>${a}</small></div>`).join('');
-  $('#admVids').innerHTML = vids.map(v=>`<div class="ep"><span>${esc(v.title)}${v.type==='series'?` (م${esc(v.season||1)} ح${esc(v.episode||1)})`:''} <small style="color:var(--mute)">– ${esc(v.uploader_name||'')}</small></span><span style="display:flex;gap:6px"><button class="btn alt" data-aedit="${esc(v.id)}">تعديل</button><button class="btn danger" data-adel="${esc(v.id)}">حذف</button></span></div>`).join('') || '<p class="empty">لا توجد أعمال مرفوعة بعد.</p>';
+  $('#admVids').innerHTML = vids.map(v=>`<div class="ep"><span>${esc(v.title)}${v.type==='series'?` (م${esc(v.season||1)} ح${esc(v.episode||1)})`:''} <small style="color:var(--mute)">– ${esc(v.uploader_name||'')}</small></span><button class="btn danger" data-adel="${esc(v.id)}">حذف</button></div>`).join('') || '<p class="empty">لا توجد أعمال مرفوعة بعد.</p>';
   $('#admUsers').innerHTML = users.map(u=>`<div class="ep"><span>${esc(u.name||u.email)}</span><small style="color:var(--mute)">${esc(u.email)}</small></div>`).join('');
   open('#admModal');
 }
@@ -380,7 +307,6 @@ function localSb(){
         return {data:rows};
       }})}),
       insert: async r => { set(V,[{...r, id:crypto.randomUUID(), created_at:new Date().toISOString()}, ...get(V,[])]); return {error:null}; },
-      update: o => ({eq: async (_,id) => { set(V, get(V,[]).map(x => x.id===id ? {...x,...o} : x)); return {error:null}; }}),
       delete: () => ({eq: async (_,id) => { set(V, get(V,[]).filter(x => x.id !== id)); return {error:null}; }})
     }),
     storage:{from: () => ({
@@ -406,7 +332,6 @@ function openItem(it){
   $('#dlAll').hidden = currentEps.length < 2;
   $('#dlAll').textContent = `تنزيل المسلسل كامل (${currentEps.length} حلقة)`;
   $('#delBtn').hidden = !(user && it.user_id && (it.user_id === user.id || isAdmin));
-  $('#editBtn').hidden = !(isAdmin && it.user_id);
   open('#playerModal'); $('#player').play().catch(()=>{});
 }
 function fileName(it){
@@ -426,20 +351,11 @@ async function dl(it){
 async function dlAll(){
   for (const e of currentEps){ await dl(e); await new Promise(r => setTimeout(r, 1500)); }
 }
-function toast(m){ const d = document.createElement('div'); d.className = 'toast'; d.textContent = m; document.body.appendChild(d); setTimeout(() => d.remove(), 3500); }
-{
-  const pl = $('#player'); let last = 0;
-  pl.addEventListener('loadedmetadata', () => { let v = 0; try { v = +localStorage.getItem('pos_' + current?.id) || 0; } catch {} if (v > 10 && v < pl.duration - 15) pl.currentTime = v; });
-  pl.addEventListener('timeupdate', () => { const t = Math.floor(pl.currentTime); if (current && t > 0 && t % 5 === 0 && t !== last){ last = t; try { localStorage.setItem('pos_' + current.id, t); } catch {} } });
-  pl.addEventListener('ended', () => { try { localStorage.removeItem('pos_' + current.id); } catch {} const i = currentEps.findIndex(x => x.id === current.id); if (i >= 0 && i < currentEps.length - 1) openItem(currentEps[i+1]); });
-}
 const open = id => $(id).classList.add('open');
 const close = el => { el.classList.remove('open'); const v=$('#player'); if(el.id==='playerModal'){v.pause();v.removeAttribute('src');v.load();} };
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape'){ document.querySelectorAll('.modal.open').forEach(close); closeSide(); } });
 document.addEventListener('click', async e => {
   const t = e.target;
-  if (setupMode && t.closest('#inBtn,#inBtn2,#upBtn,#heroUpload')) return toast('الموقع قيد الإعداد: الحسابات والرفع متوقفة مؤقتًا.');
   if (t.closest('.side button') || t.id==='scrim') closeSide();
   if (t.closest('[data-close]')) return close(t.closest('.modal'));
   if (t.classList.contains('modal')) return close(t);
@@ -469,9 +385,6 @@ document.addEventListener('click', async e => {
   if (md){ const it = items.find(i => String(i.id)===md.dataset.mdel); if (it && confirm('حذف «'+it.title+'» نهائيًا؟') && await removeItem(it)){ await load(); openProfile(); } }
   if (t.id==='outBtn'){ await sb.auth.signOut(); user=null; isAdmin=false; renderUser(); }
   if (t.id==='admBtn') return openAdmin();
-  if (t.id==='editBtn') return openEdit(current);
-  const ae = t.closest('[data-aedit]');
-  if (ae) return openEdit(items.find(i => String(i.id)===ae.dataset.aedit));
   const ad = t.closest('[data-adel]');
   if (ad){ const it = items.find(i => String(i.id)===ad.dataset.adel); if(it && confirm('حذف «'+it.title+'» نهائيًا؟') && await removeItem(it)){ await load(); openAdmin(); } }
   if (t.id==='heroUpload'){ if(!live) return alert('فعّل Supabase أولًا (راجع README) لتتمكن من الرفع.'); if(!user){ setAuthMode(true); open('#authModal'); } else open('#uploadModal'); }
@@ -493,7 +406,7 @@ function setAuthMode(s){
 }
 $('#authSwap').onclick = () => setAuthMode(!signup);
 $('#authGo').onclick = async () => {
-  if (!cloud && !dev) return;
+  if (!live) return;
   const email = $('#aEmail').value.trim(), password = $('#aPass').value, msg = $('#authMsg');
   msg.textContent = 'جارٍ المعالجة...';
   const res = signup
@@ -532,7 +445,7 @@ $('#upGo').onclick = async () => {
 };
 
 (async () => {
-  if (!setupMode){
+  if (live){
     const {data} = await sb.auth.getSession(); user = data.session?.user || null;
     sb.auth.onAuthStateChange((_e, s) => { user = s?.user || null; refreshUser(); });
   }
