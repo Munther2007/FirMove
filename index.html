@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سينما كلاود – أفلام ومسلسلات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#15111f;--card:#1f1a2e;--line:#322b48;--text:#f1ecf7;--mute:#a79fba;--gold:#f2b84b;--rose:#e0577a}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--text);font-family:'Readex Pro',Tahoma,sans-serif;line-height:1.7}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+header{position:sticky;top:0;z-index:20;display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 5vw;background:rgba(21,17,31,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.logo{font-weight:700;font-size:1.3rem;color:var(--gold)}
+.search{flex:1;min-width:160px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 18px}
+.btn{background:var(--gold);color:#241a05;border:0;border-radius:8px;padding:8px 18px;font-weight:600;cursor:pointer}
+.btn.alt{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.danger{background:var(--rose);color:#fff}
+.hero{padding:7vh 5vw 4vh;max-width:900px}
+.hero h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.25;font-weight:700}
+.hero p{color:var(--mute);margin:12px 0 20px;max-width:56ch}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;padding:0 5vw 18px}
+.tab{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 18px;cursor:pointer}
+.tab[aria-pressed=true]{background:var(--gold);color:#241a05;border-color:var(--gold);font-weight:600}
+main{padding:0 5vw 60px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px}
+.card{cursor:pointer;background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--line);text-align:start;padding:0;display:block;width:100%}
+.card:hover{border-color:var(--gold)}
+.poster{aspect-ratio:2/3;background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:10px;font-weight:700;font-size:1.1rem;line-height:1.3}
+.card .meta{padding:10px 12px}
+.card h3{font-size:.95rem;font-weight:600}
+.card small{color:var(--mute)}
+.empty{color:var(--mute);padding:40px 0}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(8,6,14,.85);display:none;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.modal.open{display:flex}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;width:100%;max-width:860px;padding:22px;max-height:94vh;overflow:auto}
+.box.sm{max-width:420px}
+.box h2{margin-bottom:12px}
+video{width:100%;border-radius:10px;background:#000;max-height:60vh}
+label{display:block;margin:10px 0 4px;color:var(--mute);font-size:.9rem}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}
+.actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.msg{margin-top:10px;color:var(--gold);min-height:1.4em;font-size:.9rem}
+.banner{background:#2b2140;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:0 5vw 18px;color:var(--mute);font-size:.9rem}
+.side{position:fixed;top:0;bottom:0;right:0;width:280px;max-width:84vw;background:var(--card);border-left:1px solid var(--line);z-index:40;transform:translateX(105%);padding:16px 12px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.side.open{transform:none}
+.scrim{position:fixed;inset:0;background:rgba(8,6,14,.6);z-index:35;display:none}.scrim.open{display:block}
+.nav{display:block;width:100%;text-align:start;background:none;border:0;border-radius:8px;padding:10px 12px;cursor:pointer}
+.nav:hover,.nav[aria-pressed=true]{background:var(--bg);color:var(--gold)}
+.nav.prof{display:flex;gap:10px;align-items:center;border:1px solid var(--line);margin-bottom:8px}
+.av{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#241a05;display:grid;place-items:center;font-weight:700}
+.sep{height:1px;background:var(--line);margin:8px 0}
+a.btn{display:inline-block;text-decoration:none;text-align:center}
+.links{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+@media (prefers-reduced-motion:no-preference){.side{transition:transform .2s}}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}.stat b{font-size:1.5rem;color:var(--gold)}
+.eps{margin-top:12px;max-height:200px;overflow:auto}
+.ep{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.epPlay{background:none;border:0;cursor:pointer;text-align:start;flex:1}
+.ep.on .epPlay{color:var(--gold);font-weight:600}
+.ep .btn{padding:4px 14px}
+@media (prefers-reduced-motion:no-preference){.modal.open .box{animation:pop .18s ease-out}@keyframes pop{from{transform:translateY(10px);opacity:0}}}
+</style>
+</head>
+<body>
+<header>
+  <button class="btn alt" id="menuBtn" aria-label="القائمة">☰</button>
+  <span class="logo">سينما كلاود</span>
+  <input class="search" id="q" type="search" placeholder="ابحث عن فيلم أو مسلسل" aria-label="بحث">
+  <span id="userBox"></span>
+</header>
+
+<section class="hero">
+  <h1>شاهد أفلامك ومسلسلاتك، وارفع محتواك الخاص</h1>
+  <p>أنشئ حسابًا مجانيًا لتتمكن من رفع الأفلام والمسلسلات ومشاركتها مع الجميع.</p>
+  <button class="btn" id="heroUpload">ارفع فيلمًا أو مسلسلًا</button>
+</section>
+
+<div class="banner" id="demoBanner" hidden>وضع التجربة المحلي: الحسابات والملفات محفوظة في هذا المتصفح فقط، وأول حساب تنشئه يصبح مديرًا. لقاعدة بيانات حقيقية أضف إعدادات Supabase في config.js.</div>
+
+<main><h2 id="secTitle" style="margin:0 0 6px">كل الأعمال</h2><p id="secNote" style="color:var(--mute);margin-bottom:14px"></p><div class="grid" id="grid"></div></main>
+
+<div class="scrim" id="scrim"></div>
+<nav class="side" id="side" aria-label="القائمة الرئيسية">
+  <div id="sideUser"></div>
+  <button class="nav" data-f="all" aria-pressed="true">الرئيسية</button>
+  <button class="nav" data-f="series" aria-pressed="false">مسلسلات</button>
+  <button class="nav" data-f="movie" aria-pressed="false">أفلام</button>
+  <button class="nav" data-f="short" aria-pressed="false">مقاطع قصيرة</button>
+  <button class="nav" data-f="quran" aria-pressed="false">قرآن</button>
+  <div class="sep"></div>
+  <button class="nav" id="contactBtn">التواصل معنا</button>
+</nav>
+
+<div class="modal" id="contactModal" role="dialog" aria-modal="true"><div class="box sm">
+  <h2>التواصل معنا</h2><div class="links" id="contactList"></div>
+  <div class="actions"><button class="btn alt" data-close>إغلاق</button></div>
+</div></div>
+
+<div class="modal" id="setModal" role="dialog" aria-modal="true"><div class="box sm">
+  <h2>الإعدادات</h2>
+  <label for="sPhone">رقم التواصل</label><input id="sPhone" type="tel" placeholder="+966500000000" dir="ltr">
+  <label for="sWa">رقم الواتساب (مع رمز الدولة)</label><input id="sWa" type="tel" placeholder="966500000000" dir="ltr">
+  <label for="sTg">رابط التليجرام أو اسم المستخدم</label><input id="sTg" placeholder="https://t.me/username" dir="ltr">
+  <div class="msg" id="setMsg"></div>
+  <div class="actions"><button class="btn" id="setGo">حفظ</button><button class="btn alt" data-close>إلغاء</button></div>
+</div></div>
+
+<div class="modal" id="profModal" role="dialog" aria-modal="true"><div class="box sm">
+  <h2>الملف الشخصي</h2><div id="profBox"></div>
+  <div class="actions"><button class="btn alt" data-close>إغلاق</button></div>
+</div></div>
+
+<!-- نافذة المشاهدة -->
+<div class="modal" id="playerModal" role="dialog" aria-modal="true"><div class="box">
+  <video id="player" controls playsinline preload="metadata"></video>
+  <h2 id="pTitle" style="margin-top:14px"></h2>
+  <p id="pMeta" style="color:var(--mute)"></p>
+  <p id="pDesc" style="margin-top:8px"></p>
+  <div class="eps" id="epList"></div>
+  <div class="actions"><button class="btn" id="dlOne">تنزيل</button><button class="btn" id="dlAll" hidden>تنزيل المسلسل كامل</button><button class="btn alt" data-close>إغلاق</button><button class="btn danger" id="delBtn" hidden>حذف</button></div>
+</div></div>
+
+<!-- نافذة الحساب -->
+<div class="modal" id="authModal" role="dialog" aria-modal="true"><div class="box sm">
+  <h2 id="authTitle">تسجيل الدخول</h2>
+  <div id="nameWrap" hidden><label for="aName">الاسم</label><input id="aName"></div>
+  <label for="aEmail">البريد الإلكتروني</label><input id="aEmail" type="email" autocomplete="email">
+  <label for="aPass">كلمة المرور</label><input id="aPass" type="password" autocomplete="current-password" minlength="6">
+  <div class="msg" id="authMsg"></div>
+  <div class="actions"><button class="btn" id="authGo">دخول</button><button class="btn alt" id="authSwap">إنشاء حساب جديد</button><button class="btn alt" data-close>إلغاء</button></div>
+</div></div>
+
+<!-- نافذة الرفع -->
+<div class="modal" id="uploadModal" role="dialog" aria-modal="true"><div class="box">
+  <h2>رفع محتوى جديد</h2>
+  <label for="uTitle">العنوان</label><input id="uTitle">
+  <div class="row">
+    <div><label for="uType">النوع</label><select id="uType"><option value="movie">فيلم</option><option value="series">مسلسل</option><option value="short">مقطع قصير</option><option value="quran">قرآن</option></select></div>
+    <div><label for="uGenre">التصنيف</label><input id="uGenre" placeholder="دراما، أكشن..."></div>
+    <div><label for="uYear">السنة</label><input id="uYear" type="number" min="1900" max="2100"></div>
+  </div>
+  <div class="row" id="epRow" hidden>
+    <div><label for="uSeason">رقم الموسم</label><input id="uSeason" type="number" min="1" value="1"></div>
+    <div><label for="uEp">رقم الحلقة</label><input id="uEp" type="number" min="1" value="1"></div>
+  </div>
+  <label for="uDesc">الوصف</label><textarea id="uDesc" rows="3"></textarea>
+  <div class="row">
+    <div><label for="uPoster">صورة الغلاف</label><input id="uPoster" type="file" accept="image/*"></div>
+    <div><label for="uVideo">ملف الفيديو</label><input id="uVideo" type="file" accept="video/*"></div>
+  </div>
+  <div class="msg" id="upMsg"></div>
+  <div class="actions"><button class="btn" id="upGo">رفع</button><button class="btn alt" data-close>إلغاء</button></div>
+</div></div>
+
+<div class="modal" id="admModal" role="dialog" aria-modal="true"><div class="box">
+  <h2>لوحة المدير</h2>
+  <div class="row" id="stats"></div>
+  <h3 style="margin:16px 0 4px">الأعمال المرفوعة</h3><div class="eps" id="admVids" style="max-height:260px"></div>
+  <h3 style="margin:16px 0 4px">المستخدمون</h3><div class="eps" id="admUsers" style="max-height:200px"></div>
+  <div class="actions"><button class="btn alt" data-close>إغلاق</button></div>
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cfg = window.SITE_CONFIG || {};
+const cloud = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase);
+const live = true;
+const sb = cloud ? supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY) : localSb();
+const BUCKET = 'media';
+
+// محتوى تجريبي (أفلام مفتوحة المصدر من مؤسسة بلندر)
+const DEMO = [
+  {id:'d1',title:'Big Buck Bunny',type:'movie',genre:'رسوم متحركة',year:2008,description:'فيلم رسوم متحركة قصير مفتوح المصدر.',video_url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'},
+  {id:'d2',title:'Sintel',type:'movie',genre:'فانتازيا',year:2010,description:'فتاة تبحث عن تنينها الصغير.',video_url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'},
+  {id:'d3',title:'Tears of Steel',type:'movie',genre:'خيال علمي',year:2012,description:'فيلم خيال علمي قصير.',video_url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4'},
+  {id:'d4',title:'Elephants Dream',type:'series',genre:'تجريبي',year:2006,season:1,episode:1,description:'حلقة تجريبية لعرض شكل المسلسلات.',video_url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'}
+];
+const TL = {movie:'فيلم',series:'مسلسل',short:'مقطع قصير',quran:'قرآن'};
+const SEC = {all:'كل الأعمال',series:'المسلسلات',movie:'الأفلام',short:'المقاطع القصيرة',quran:'القرآن'};
+const HUES = [265, 330, 20, 190, 150, 45];
+let items = [], filter = 'all', user = null, current = null, signup = false, isAdmin = false;
+
+function posterStyle(it, i){
+  if (it.poster_url) return `background-image:url('${esc(it.poster_url)}')`;
+  const h = HUES[i % HUES.length];
+  return `background-image:linear-gradient(160deg,hsl(${h} 55% 32%),hsl(${(h+50)%360} 60% 14%))`;
+}
+function render(){
+  const q = $('#q').value.trim().toLowerCase();
+  const list = items.filter(i => (filter==='all'||i.type===filter) && (!q || (i.title+' '+(i.genre||'')).toLowerCase().includes(q)));
+  $('#grid').innerHTML = list.length ? list.map((it,i)=>`
+    <button class="card" data-id="${esc(it.id)}">
+      <div class="poster" style="${posterStyle(it,i)}">${it.poster_url?'':esc(it.title)}</div>
+      <div class="meta"><h3>${esc(it.title)}</h3>
+      <small>${it.type==='series'?`مسلسل${it.season?` – م${esc(it.season)} ح${esc(it.episode)}`:''}`:(TL[it.type]||'فيلم')}${it.year?' • '+esc(it.year):''}</small></div>
+    </button>`).join('') : '<p class="empty">لا توجد نتائج. جرّب كلمة بحث أخرى أو ارفع أول عمل.</p>';
+}
+async function load(){
+  const {data, error} = await sb.from('videos').select('*').order('created_at',{ascending:false}).limit(300);
+  items = (cloud ? [] : DEMO).concat(error ? [] : data);
+  $('#demoBanner').hidden = cloud; render();
+}
+function renderUser(){
+  $('#userBox').innerHTML = user ? '<button class="btn" id="upBtn">رفع</button>' : '<button class="btn" id="inBtn">تسجيل الدخول</button>';
+  const nm = user ? String(user.user_metadata?.name || user.email) : '';
+  $('#sideUser').innerHTML = user
+    ? `<button class="nav prof" id="profBtn"><span class="av">${esc(nm.trim()[0]||'?')}</span><span>${esc(nm)}<br><small style="color:var(--mute)">${isAdmin?'مدير':'عضو'}</small></span></button>`
+      + (isAdmin ? '<button class="nav" id="admBtn">لوحة المدير</button><button class="nav" id="setBtn">الإعدادات</button><div class="sep"></div>' : '')
+      + '<button class="nav" id="outBtn">تسجيل خروج</button><div class="sep"></div>'
+    : '<button class="nav" id="inBtn2">تسجيل الدخول</button><div class="sep"></div>';
+}
+async function checkAdmin(){
+  if (!user) return isAdmin = false;
+  if (!cloud){ const {data} = await sb.auth.getSession(); return isAdmin = !!data.session?.user.is_admin; }
+  const {data} = await sb.from('admins').select('user_id').eq('user_id', user.id);
+  return isAdmin = !!(data && data.length);
+}
+async function refreshUser(){ await checkAdmin(); renderUser(); }
+async function getSettings(){
+  if (cloud){ const {data} = await sb.from('settings').select('*').eq('id',1); return (data && data[0]) || {}; }
+  try { return JSON.parse(localStorage.getItem('cc_settings') || '{}'); } catch { return {}; }
+}
+async function saveSettings(v){
+  if (cloud){ const {error} = await sb.from('settings').upsert({id:1, ...v}); return error; }
+  try { localStorage.setItem('cc_settings', JSON.stringify(v)); return null; } catch(e){ return e; }
+}
+async function openContact(){
+  const c = await getSettings(), L = [];
+  const ph = (c.phone||'').replace(/[^\d+]/g,''), wa = (c.whatsapp||'').replace(/\D/g,'');
+  let tg = (c.telegram||'').trim();
+  if (tg) tg = /^https:\/\/(t|telegram)\.me\/[\w\-+\/]+$/i.test(tg) ? tg : 'https://t.me/' + tg.replace(/^@/,'').replace(/[^\w]/g,'');
+  if (ph) L.push(`<a class="btn" href="tel:${ph}">اتصال هاتفي <bdi dir="ltr">${esc(ph)}</bdi></a>`);
+  if (wa) L.push(`<a class="btn" href="https://wa.me/${wa}" target="_blank" rel="noopener">واتساب</a>`);
+  if (tg.length > 14) L.push(`<a class="btn" href="${esc(tg)}" target="_blank" rel="noopener">تليجرام</a>`);
+  $('#contactList').innerHTML = L.join('') || '<p class="empty">لم يضف المدير وسائل التواصل بعد.</p>';
+  open('#contactModal');
+}
+async function openSettings(){
+  const c = await getSettings();
+  $('#sPhone').value = c.phone || ''; $('#sWa').value = c.whatsapp || ''; $('#sTg').value = c.telegram || '';
+  $('#setMsg').textContent = ''; open('#setModal');
+}
+$('#setGo').onclick = async () => {
+  const err = await saveSettings({phone:$('#sPhone').value.trim(), whatsapp:$('#sWa').value.trim(), telegram:$('#sTg').value.trim()});
+  $('#setMsg').textContent = err ? 'تعذّر الحفظ: ' + (err.message||err) : 'تم حفظ الإعدادات.';
+};
+function openProfile(){
+  const nm = user.user_metadata?.name || user.email, mine = items.filter(i => i.user_id === user.id);
+  $('#profBox').innerHTML = `<p><b>${esc(nm)}</b></p><p style="color:var(--mute)">${esc(user.email)} • ${isAdmin?'مدير':'عضو'}</p><h3 style="margin:14px 0 4px">أعمالي (${mine.length})</h3><div class="eps">`
+    + (mine.map(v=>`<div class="ep"><button class="epPlay" data-ep="${esc(v.id)}">${esc(v.title)}</button><button class="btn danger" data-mdel="${esc(v.id)}">حذف</button></div>`).join('') || '<p class="empty">لم ترفع أي عمل بعد.</p>') + '</div>';
+  open('#profModal');
+}
+const closeSide = () => { $('#side').classList.remove('open'); $('#scrim').classList.remove('open'); };
+async function removeItem(it){
+  const paths = [it.video_path, it.poster_path].filter(Boolean);
+  const {error} = await sb.from('videos').delete().eq('id', it.id);
+  if (error){ alert('تعذّر الحذف: ' + error.message); return false; }
+  if (paths.length) await sb.storage.from(BUCKET).remove(paths);
+  return true;
+}
+async function openAdmin(){
+  const vids = items.filter(i => i.user_id);
+  let users = [];
+  if (cloud){ const {data} = await sb.from('profiles').select('*').order('created_at',{ascending:false}).limit(500); users = data || []; }
+  else { try { users = JSON.parse(localStorage.getItem('cc_users')||'[]'); } catch {} }
+  const st = [['الأعمال',vids.length],['الأفلام',vids.filter(v=>v.type==='movie').length],['المسلسلات',vids.filter(v=>v.type==='series').length],['المستخدمون',users.length]];
+  $('#stats').innerHTML = st.map(([a,b])=>`<div class="stat"><b>${b}</b><br><small>${a}</small></div>`).join('');
+  $('#admVids').innerHTML = vids.map(v=>`<div class="ep"><span>${esc(v.title)}${v.type==='series'?` (م${esc(v.season||1)} ح${esc(v.episode||1)})`:''} <small style="color:var(--mute)">– ${esc(v.uploader_name||'')}</small></span><button class="btn danger" data-adel="${esc(v.id)}">حذف</button></div>`).join('') || '<p class="empty">لا توجد أعمال مرفوعة بعد.</p>';
+  $('#admUsers').innerHTML = users.map(u=>`<div class="ep"><span>${esc(u.name||u.email)}</span><small style="color:var(--mute)">${esc(u.email)}</small></div>`).join('');
+  open('#admModal');
+}
+// وضع التجربة المحلي: يحاكي Supabase داخل المتصفح (للتجربة فقط، كلمات المرور غير مشفّرة)
+function localSb(){
+  const mem = {}, K='cc_users', V='cc_videos', S='cc_session';
+  const get = (k,d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return mem[k] ?? d; } };
+  const set = (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { mem[k] = v; } };
+  const del = k => { try { localStorage.removeItem(k); } catch { delete mem[k]; } };
+  const idb = () => new Promise((res,rej)=>{ const r = indexedDB.open('cc',1); r.onupgradeneeded = () => r.result.createObjectStore('f'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+  const tx = async (m, fn) => { const d = await idb(); return new Promise((res,rej)=>{ const t = d.transaction('f',m), q = fn(t.objectStore('f')); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error); }); };
+  const pub = u => ({id:u.id, email:u.email, is_admin:u.is_admin, user_metadata:{name:u.name}});
+  const login = u => { set(S,u.id); const user = pub(u); return {data:{user, session:{user}}, error:null}; };
+  return {
+    auth:{
+      getSession: async () => { const u = get(K,[]).find(x => x.id === get(S,null)); return {data:{session: u ? {user:pub(u)} : null}}; },
+      onAuthStateChange(){},
+      signOut: async () => del(S),
+      signUp: async ({email,password,options}) => {
+        const us = get(K,[]);
+        if (us.some(x => x.email === email)) return {data:{}, error:{message:'هذا البريد مسجّل مسبقًا'}};
+        if (!email || password.length < 6) return {data:{}, error:{message:'أدخل بريدًا صحيحًا وكلمة مرور من 6 أحرف على الأقل'}};
+        const u = {id:crypto.randomUUID(), email, password, name:options?.data?.name || email.split('@')[0], is_admin:us.length===0, created_at:new Date().toISOString()};
+        us.push(u); set(K,us); return login(u);
+      },
+      signInWithPassword: async ({email,password}) => { const u = get(K,[]).find(x => x.email===email && x.password===password); return u ? login(u) : {data:{}, error:{message:'بيانات الدخول غير صحيحة'}}; }
+    },
+    from: () => ({
+      select: () => ({order: () => ({limit: async () => {
+        const rows = get(V,[]);
+        for (const r of rows) for (const f of ['video_url','poster_url']) if (r[f]?.startsWith('idb:')) { const b = await tx('readonly', st => st.get(r[f].slice(4))); r[f] = b ? URL.createObjectURL(b) : null; }
+        return {data:rows};
+      }})}),
+      insert: async r => { set(V,[{...r, id:crypto.randomUUID(), created_at:new Date().toISOString()}, ...get(V,[])]); return {error:null}; },
+      delete: () => ({eq: async (_,id) => { set(V, get(V,[]).filter(x => x.id !== id)); return {error:null}; }})
+    }),
+    storage:{from: () => ({
+      upload: async (path,f) => { try { await tx('readwrite', st => st.put(f,path)); return {error:null}; } catch(e){ return {error:{message:'المتصفح لا يسمح بحفظ الملفات هنا، شغّل الموقع من خادم أو GitHub Pages'}}; } },
+      getPublicUrl: p => ({data:{publicUrl:'idb:'+p}}),
+      remove: async ps => { for (const p of ps) await tx('readwrite', st => st.delete(p)); return {error:null}; }
+    })}
+  };
+}
+let currentEps = [];
+function openItem(it){
+  document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'));
+  current = it;
+  $('#player').src = it.video_url;
+  $('#pTitle').textContent = it.title;
+  $('#pMeta').textContent = [TL[it.type]||'فيلم', it.genre, it.year, it.uploader_name&&('رفع بواسطة '+it.uploader_name)].filter(Boolean).join(' • ');
+  $('#pDesc').textContent = it.description || '';
+  currentEps = it.type==='series'
+    ? items.filter(x => x.type==='series' && x.title===it.title).sort((a,b)=>(a.season||1)-(b.season||1)||(a.episode||1)-(b.episode||1))
+    : [];
+  $('#epList').innerHTML = currentEps.length>1 ? currentEps.map(e=>`<div class="ep${e.id===it.id?' on':''}"><button class="epPlay" data-ep="${esc(e.id)}">الموسم ${esc(e.season||1)} – الحلقة ${esc(e.episode||1)}</button><button class="btn alt" data-dl="${esc(e.id)}">تنزيل</button></div>`).join('') : '';
+  $('#dlOne').textContent = it.type==='series' ? 'تنزيل هذه الحلقة' : 'تنزيل';
+  $('#dlAll').hidden = currentEps.length < 2;
+  $('#dlAll').textContent = `تنزيل المسلسل كامل (${currentEps.length} حلقة)`;
+  $('#delBtn').hidden = !(user && it.user_id && (it.user_id === user.id || isAdmin));
+  open('#playerModal'); $('#player').play().catch(()=>{});
+}
+function fileName(it){
+  const ext = (it.video_url.split('?')[0].match(/\.(\w{2,4})$/)||[])[1] || 'mp4';
+  return `${it.title}${it.type==='series' ? ` S${it.season||1}E${it.episode||1}` : ''}.${ext}`;
+}
+async function dl(it){
+  const name = fileName(it), a = document.createElement('a');
+  if (it.video_url.includes('/storage/v1/object/public/')) {
+    a.href = it.video_url + (it.video_url.includes('?') ? '&' : '?') + 'download=' + encodeURIComponent(name);
+  } else {
+    try { const r = await fetch(it.video_url); if (!r.ok) throw 0; a.href = URL.createObjectURL(await r.blob()); }
+    catch { window.open(it.video_url, '_blank', 'noopener'); return; }
+  }
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+}
+async function dlAll(){
+  for (const e of currentEps){ await dl(e); await new Promise(r => setTimeout(r, 1500)); }
+}
+const open = id => $(id).classList.add('open');
+const close = el => { el.classList.remove('open'); const v=$('#player'); if(el.id==='playerModal'){v.pause();v.removeAttribute('src');v.load();} };
+
+document.addEventListener('click', async e => {
+  const t = e.target;
+  if (t.closest('.side button') || t.id==='scrim') closeSide();
+  if (t.closest('[data-close]')) return close(t.closest('.modal'));
+  if (t.classList.contains('modal')) return close(t);
+  const tab = t.closest('[data-f]');
+  if (tab){
+    filter = tab.dataset.f;
+    document.querySelectorAll('[data-f]').forEach(b => b.setAttribute('aria-pressed', b === tab));
+    $('#secTitle').textContent = SEC[filter];
+    $('#secNote').innerHTML = filter==='quran' ? 'للمصحف الكامل: <a href="https://quran.com/ar" target="_blank" rel="noopener" style="color:var(--gold)">quran.com</a>' : '';
+    return render();
+  }
+  const card = t.closest('.card');
+  if (card) return openItem(items.find(i => String(i.id) === card.dataset.id));
+  const ep = t.closest('[data-ep]');
+  if (ep) return openItem(items.find(i => String(i.id) === ep.dataset.ep));
+  const one = t.closest('[data-dl]');
+  if (one) return dl(items.find(i => String(i.id) === one.dataset.dl));
+  if (t.id==='dlOne') return dl(current);
+  if (t.id==='dlAll') { t.disabled = true; await dlAll(); t.disabled = false; return; }
+  if (t.id==='inBtn' || t.id==='inBtn2') { setAuthMode(false); open('#authModal'); }
+  if (t.id==='menuBtn'){ $('#side').classList.add('open'); $('#scrim').classList.add('open'); }
+  if (t.id==='contactBtn') return openContact();
+  if (t.id==='profBtn') return openProfile();
+  if (t.id==='setBtn') return openSettings();
+  if (t.id==='upBtn') return open('#uploadModal');
+  const md = t.closest('[data-mdel]');
+  if (md){ const it = items.find(i => String(i.id)===md.dataset.mdel); if (it && confirm('حذف «'+it.title+'» نهائيًا؟') && await removeItem(it)){ await load(); openProfile(); } }
+  if (t.id==='outBtn'){ await sb.auth.signOut(); user=null; isAdmin=false; renderUser(); }
+  if (t.id==='admBtn') return openAdmin();
+  const ad = t.closest('[data-adel]');
+  if (ad){ const it = items.find(i => String(i.id)===ad.dataset.adel); if(it && confirm('حذف «'+it.title+'» نهائيًا؟') && await removeItem(it)){ await load(); openAdmin(); } }
+  if (t.id==='heroUpload'){ if(!live) return alert('فعّل Supabase أولًا (راجع README) لتتمكن من الرفع.'); if(!user){ setAuthMode(true); open('#authModal'); } else open('#uploadModal'); }
+  if (t.id==='delBtn'){
+    if(!confirm('هل تريد حذف هذا العمل نهائيًا؟')) return;
+    if (await removeItem(current)){ close($('#playerModal')); load(); }
+  }
+});
+$('#q').addEventListener('input', render);
+$('#uType').addEventListener('change', e => $('#epRow').hidden = e.target.value!=='series');
+
+function setAuthMode(s){
+  signup = s;
+  $('#authTitle').textContent = s ? 'إنشاء حساب جديد' : 'تسجيل الدخول';
+  $('#nameWrap').hidden = !s;
+  $('#authGo').textContent = s ? 'إنشاء الحساب' : 'دخول';
+  $('#authSwap').textContent = s ? 'لدي حساب بالفعل' : 'إنشاء حساب جديد';
+  $('#authMsg').textContent = live ? '' : 'الحسابات غير مفعّلة بعد. أضف إعدادات Supabase في config.js.';
+}
+$('#authSwap').onclick = () => setAuthMode(!signup);
+$('#authGo').onclick = async () => {
+  if (!live) return;
+  const email = $('#aEmail').value.trim(), password = $('#aPass').value, msg = $('#authMsg');
+  msg.textContent = 'جارٍ المعالجة...';
+  const res = signup
+    ? await sb.auth.signUp({email, password, options:{data:{name:$('#aName').value.trim()}}})
+    : await sb.auth.signInWithPassword({email, password});
+  if (res.error) return msg.textContent = 'تعذّر الدخول: ' + res.error.message;
+  if (signup && !res.data.session) return msg.textContent = 'تم إنشاء الحساب. تحقق من بريدك لتأكيد الحساب ثم سجّل الدخول.';
+  user = res.data.user; await refreshUser(); close($('#authModal'));
+};
+
+$('#upGo').onclick = async () => {
+  const msg = $('#upMsg'), title = $('#uTitle').value.trim(), vid = $('#uVideo').files[0], pos = $('#uPoster').files[0];
+  if (!title || !vid) return msg.textContent = 'أدخل العنوان واختر ملف الفيديو.';
+  $('#upGo').disabled = true; msg.textContent = 'جارٍ الرفع... قد يستغرق ذلك بعض الوقت للملفات الكبيرة.';
+  try {
+    const put = async f => {
+      const path = `${user.id}/${Date.now()}-${f.name.replace(/[^\w.\-]/g,'_')}`;
+      const {error} = await sb.storage.from(BUCKET).upload(path, f);
+      if (error) throw error;
+      return [sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl, path];
+    };
+    const [video_url, video_path] = await put(vid);
+    const [poster_url, poster_path] = pos ? await put(pos) : [null, null];
+    const isS = $('#uType').value === 'series';
+    const {error} = await sb.from('videos').insert({
+      title, type:$('#uType').value, genre:$('#uGenre').value.trim(), year:+$('#uYear').value||null,
+      description:$('#uDesc').value.trim(), season:isS?+$('#uSeason').value:null, episode:isS?+$('#uEp').value:null,
+      video_url, poster_url, video_path, poster_path, user_id:user.id, uploader_name:user.user_metadata?.name||user.email.split('@')[0]
+    });
+    if (error) throw error;
+    msg.textContent = 'تم الرفع بنجاح.';
+    ['#uTitle','#uGenre','#uYear','#uDesc','#uVideo','#uPoster'].forEach(s=>$(s).value='');
+    close($('#uploadModal')); load();
+  } catch(err){ msg.textContent = 'فشل الرفع: ' + (err.message||err); }
+  $('#upGo').disabled = false;
+};
+
+(async () => {
+  if (live){
+    const {data} = await sb.auth.getSession(); user = data.session?.user || null;
+    sb.auth.onAuthStateChange((_e, s) => { user = s?.user || null; refreshUser(); });
+  }
+  await refreshUser(); load();
+})();
+</script>
+</body>
+</html>
