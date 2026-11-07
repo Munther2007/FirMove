@@ -3,9 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>سينما كلاود – أفلام ومسلسلات</title>
+<title>سينما كلاود – شاهد أفلام ومسلسلات أونلاين</title>
+<meta name="description" content="شاهد الأفلام والمسلسلات والمقاطع القصيرة، تابع من حيث توقفت، واحفظ مفضلتك، وارفع محتواك الخاص.">
+<meta name="theme-color" content="#15111f">
+<meta property="og:title" content="سينما كلاود"><meta property="og:description" content="أفلام ومسلسلات ومقاطع قصيرة في مكان واحد."><meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎬%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600;700&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#15111f;--card:#1f1a2e;--line:#322b48;--text:#f1ecf7;--mute:#a79fba;--gold:#f2b84b;--rose:#e0577a}
 *{box-sizing:border-box;margin:0}
@@ -63,6 +67,36 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
 .ep.on .epPlay{color:var(--gold);font-weight:600}
 .ep .btn{padding:4px 14px}
 @media (prefers-reduced-motion:no-preference){.modal.open .box{animation:pop .18s ease-out}@keyframes pop{from{transform:translateY(10px);opacity:0}}}
+
+h1,h2,.logo{font-family:'Reem Kufi','Readex Pro',sans-serif}
+.hero{position:relative;max-width:none;min-height:58vh;display:flex;flex-direction:column;justify-content:flex-end;background-size:cover;background-position:center;isolation:isolate;padding-bottom:5vh}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,var(--bg) 3%,rgba(21,17,31,.6) 50%,rgba(21,17,31,.88)),radial-gradient(ellipse at 85% 0,rgba(242,184,75,.25),transparent 60%)}
+.hc{max-width:640px}.hc p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hc .meta2{color:var(--gold);font-size:.9rem;margin-top:8px}
+.hc .acts{display:flex;gap:10px;flex-wrap:wrap}
+.btn.big{padding:12px 28px;font-size:1.05rem}
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:6px 5vw 14px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 16px;cursor:pointer;font-size:.9rem}
+.chip[aria-pressed=true]{background:var(--gold);color:#241a05;border-color:var(--gold);font-weight:600}
+#sortSel{width:auto;margin-inline-start:auto;border-radius:999px;padding:4px 14px}
+#cont{padding:0 5vw}.rowt{margin:0 0 10px;font-size:1.3rem}
+.strip{display:flex;gap:14px;overflow-x:auto;padding-bottom:18px}.strip .card{flex:0 0 150px;width:150px}
+.card{position:relative}
+.card .open{display:block;width:100%;background:none;border:0;padding:0;text-align:start;cursor:pointer}
+.fav{position:absolute;top:8px;inset-inline-start:8px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(21,17,31,.75);color:var(--gold);font-size:1.2rem;cursor:pointer}
+.fav[aria-pressed=true]{color:var(--rose)}
+.pbar{height:4px;background:var(--line)}.pbar i{display:block;height:100%;background:var(--gold)}
+.sk{aspect-ratio:2/3;border-radius:10px;background:var(--card)}
+@media (prefers-reduced-motion:no-preference){.sk{animation:sh 1.2s ease-in-out infinite alternate}@keyframes sh{to{opacity:.45}}}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--gold);border-radius:999px;padding:8px 20px;z-index:80;opacity:0;pointer-events:none}.toast.on{opacity:1}
+.chk{display:flex;gap:8px;align-items:flex-start;color:var(--text)}.chk input{width:auto;margin-top:6px}
+.linkbtn{background:none;border:0;color:var(--gold);cursor:pointer;text-decoration:underline;padding:4px 0}
+progress{width:100%;accent-color:var(--gold)}
+footer{padding:24px 5vw 40px;color:var(--mute);font-size:.85rem;border-top:1px solid var(--line)}
+.tnav{display:flex;gap:6px;flex-basis:100%;overflow-x:auto;scrollbar-width:none}
+.tnav button{flex:0 0 auto;background:none;border:0;border-bottom:2px solid transparent;border-radius:0;padding:6px 14px;cursor:pointer;color:var(--mute)}
+.tnav button:hover{color:var(--text)}.tnav button[aria-pressed=true]{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
+@media (max-width:700px){.hero{min-height:50vh}}
 </style>
 </head>
 <body>
@@ -71,18 +105,28 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
   <span class="logo">سينما كلاود</span>
   <input class="search" id="q" type="search" placeholder="ابحث عن فيلم أو مسلسل" aria-label="بحث">
   <span id="userBox"></span>
+  <nav class="tnav" aria-label="الأقسام">
+    <button data-f="all" aria-pressed="true">الرئيسية</button><button data-f="movie" aria-pressed="false">أفلام</button><button data-f="series" aria-pressed="false">مسلسلات</button><button data-f="short" aria-pressed="false">مقاطع</button><button data-f="quran" aria-pressed="false">قرآن</button><button data-f="fav" aria-pressed="false">مفضلتي</button><button data-search>بحث</button>
+  </nav>
 </header>
 
-<section class="hero">
-  <h1>شاهد أفلامك ومسلسلاتك، وارفع محتواك الخاص</h1>
-  <p>أنشئ حسابًا مجانيًا لتتمكن من رفع الأفلام والمسلسلات ومشاركتها مع الجميع.</p>
-  <button class="btn" id="heroUpload">ارفع فيلمًا أو مسلسلًا</button>
-</section>
+<section class="hero" id="hero"></section>
+<div class="chips" id="chips"></div>
+<div id="cont"></div>
 
-<div class="banner" id="demoBanner" hidden>وضع التجربة المحلي: الحسابات والملفات محفوظة في هذا المتصفح فقط، وأول حساب تنشئه يصبح مديرًا. لقاعدة بيانات حقيقية أضف إعدادات Supabase في config.js.</div>
+<div class="banner" id="demoBanner" hidden>الموقع غير مربوط بقاعدة البيانات بعد. أضف إعدادات Supabase في ملف config.js.</div>
 
-<main><h2 id="secTitle" style="margin:0 0 6px">كل الأعمال</h2><p id="secNote" style="color:var(--mute);margin-bottom:14px"></p><div class="grid" id="grid"></div></main>
+<main><h2 id="secTitle" style="margin:0 0 6px">كل الأعمال</h2><p id="secNote" style="color:var(--mute);margin-bottom:14px"></p><div class="grid" id="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></main>
+<footer>© سينما كلاود. المحتوى المرفوع مسؤولية رافعه. <button class="linkbtn" id="legalBtn">الشروط وحقوق النشر</button></footer>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal" id="legalModal" role="dialog" aria-modal="true" aria-label="الشروط"><div class="box sm">
+  <h2>الشروط وحقوق النشر</h2>
+  <p>يتحمل كل مستخدم مسؤولية ما يرفعه، ويُمنع رفع أي محتوى لا تملك حقوقه أو لا تملك إذنًا بنشره.</p>
+  <p style="margin-top:8px">يحق للإدارة حذف أي عمل مخالف. للإبلاغ عن مخالفة استخدم زر «إبلاغ» داخل صفحة المشاهدة أو «التواصل معنا».</p>
+  <p style="margin-top:8px">نحفظ اسمك وبريدك لإدارة الحساب فقط. المفضلة وموضع المشاهدة يُحفظان في متصفحك.</p>
+  <div class="actions"><button class="btn alt" data-close>إغلاق</button></div>
+</div></div>
 <div class="scrim" id="scrim"></div>
 <nav class="side" id="side" aria-label="القائمة الرئيسية">
   <div id="sideUser"></div>
@@ -91,6 +135,7 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
   <button class="nav" data-f="movie" aria-pressed="false">أفلام</button>
   <button class="nav" data-f="short" aria-pressed="false">مقاطع قصيرة</button>
   <button class="nav" data-f="quran" aria-pressed="false">قرآن</button>
+  <button class="nav" data-f="fav" aria-pressed="false">مفضلتي</button>
   <div class="sep"></div>
   <button class="nav" id="contactBtn">التواصل معنا</button>
 </nav>
@@ -121,7 +166,7 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
   <p id="pMeta" style="color:var(--mute)"></p>
   <p id="pDesc" style="margin-top:8px"></p>
   <div class="eps" id="epList"></div>
-  <div class="actions"><button class="btn" id="dlOne">تنزيل</button><button class="btn" id="dlAll" hidden>تنزيل المسلسل كامل</button><button class="btn alt" data-close>إغلاق</button><button class="btn danger" id="delBtn" hidden>حذف</button></div>
+  <div class="actions"><button class="btn" id="dlOne">تنزيل</button><button class="btn" id="dlAll" hidden>تنزيل المسلسل كامل</button><button class="btn alt" id="shBtn">نسخ الرابط</button><button class="btn alt" id="favBtn">♡ المفضلة</button><button class="btn alt" id="repBtn">إبلاغ</button><button class="btn alt" data-close>إغلاق</button><button class="btn danger" id="delBtn" hidden>حذف</button></div>
 </div></div>
 
 <!-- نافذة الحساب -->
@@ -130,6 +175,7 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
   <div id="nameWrap" hidden><label for="aName">الاسم</label><input id="aName"></div>
   <label for="aEmail">البريد الإلكتروني</label><input id="aEmail" type="email" autocomplete="email">
   <label for="aPass">كلمة المرور</label><input id="aPass" type="password" autocomplete="current-password" minlength="6">
+  <label class="chk"><input type="checkbox" id="showPw"> إظهار كلمة المرور</label><button class="linkbtn" id="forgot" type="button">نسيت كلمة المرور؟</button>
   <div class="msg" id="authMsg"></div>
   <div class="actions"><button class="btn" id="authGo">دخول</button><button class="btn alt" id="authSwap">إنشاء حساب جديد</button><button class="btn alt" data-close>إلغاء</button></div>
 </div></div>
@@ -152,6 +198,8 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
     <div><label for="uPoster">صورة الغلاف</label><input id="uPoster" type="file" accept="image/*"></div>
     <div><label for="uVideo">ملف الفيديو</label><input id="uVideo" type="file" accept="video/*"></div>
   </div>
+  <label class="chk"><input type="checkbox" id="uRights"> أقرّ بأنني أملك حقوق هذا المحتوى أو لدي إذن بنشره.</label>
+  <progress id="upProg" hidden></progress>
   <div class="msg" id="upMsg"></div>
   <div class="actions"><button class="btn" id="upGo">رفع</button><button class="btn alt" data-close>إلغاء</button></div>
 </div></div>
@@ -171,19 +219,11 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const cfg = window.SITE_CONFIG || {};
 const cloud = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase);
-const live = true;
-const sb = cloud ? supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY) : localSb();
+const sb = cloud ? supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY) : null;
 const BUCKET = 'media';
 
-// محتوى تجريبي (أفلام مفتوحة المصدر من مؤسسة بلندر)
-const DEMO = [
-  {id:'d1',title:'Big Buck Bunny',type:'movie',genre:'رسوم متحركة',year:2008,description:'فيلم رسوم متحركة قصير مفتوح المصدر.',video_url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'},
-  {id:'d2',title:'Sintel',type:'movie',genre:'فانتازيا',year:2010,description:'فتاة تبحث عن تنينها الصغير.',video_url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'},
-  {id:'d3',title:'Tears of Steel',type:'movie',genre:'خيال علمي',year:2012,description:'فيلم خيال علمي قصير.',video_url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4'},
-  {id:'d4',title:'Elephants Dream',type:'series',genre:'تجريبي',year:2006,season:1,episode:1,description:'حلقة تجريبية لعرض شكل المسلسلات.',video_url:'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'}
-];
 const TL = {movie:'فيلم',series:'مسلسل',short:'مقطع قصير',quran:'قرآن'};
-const SEC = {all:'كل الأعمال',series:'المسلسلات',movie:'الأفلام',short:'المقاطع القصيرة',quran:'القرآن'};
+const SEC = {all:'كل الأعمال',series:'المسلسلات',movie:'الأفلام',short:'المقاطع القصيرة',quran:'القرآن',fav:'مفضلتي'};
 const HUES = [265, 330, 20, 190, 150, 45];
 let items = [], filter = 'all', user = null, current = null, signup = false, isAdmin = false;
 
@@ -192,20 +232,35 @@ function posterStyle(it, i){
   const h = HUES[i % HUES.length];
   return `background-image:linear-gradient(160deg,hsl(${h} 55% 32%),hsl(${(h+50)%360} 60% 14%))`;
 }
+function cardHTML(it,i){
+  const pr=prog[it.id], pc=pr&&pr.d?Math.min(100,pr.t/pr.d*100):0, f=fav.includes(String(it.id));
+  return `<div class="card" data-id="${esc(it.id)}"><button class="open"><div class="poster" style="${posterStyle(it,i)}">${it.poster_url?'':esc(it.title)}</div>${pc>2?`<div class="pbar"><i style="width:${pc}%"></i></div>`:''}<div class="meta"><h3>${esc(it.title)}</h3><small>${it.type==='series'?`مسلسل${it.season?` – م${esc(it.season)} ح${esc(it.episode)}`:''}`:(TL[it.type]||'فيلم')}${it.year?' • '+esc(it.year):''}</small></div></button><button class="fav" data-fav="${esc(it.id)}" aria-pressed="${f}" aria-label="${f?'إزالة من المفضلة':'إضافة إلى المفضلة'}">${f?'♥':'♡'}</button></div>`;
+}
 function render(){
   const q = $('#q').value.trim().toLowerCase();
-  const list = items.filter(i => (filter==='all'||i.type===filter) && (!q || (i.title+' '+(i.genre||'')).toLowerCase().includes(q)));
-  $('#grid').innerHTML = list.length ? list.map((it,i)=>`
-    <button class="card" data-id="${esc(it.id)}">
-      <div class="poster" style="${posterStyle(it,i)}">${it.poster_url?'':esc(it.title)}</div>
-      <div class="meta"><h3>${esc(it.title)}</h3>
-      <small>${it.type==='series'?`مسلسل${it.season?` – م${esc(it.season)} ح${esc(it.episode)}`:''}`:(TL[it.type]||'فيلم')}${it.year?' • '+esc(it.year):''}</small></div>
-    </button>`).join('') : '<p class="empty">لا توجد نتائج. جرّب كلمة بحث أخرى أو ارفع أول عمل.</p>';
+  const list = items.filter(i => (filter==='all'||(filter==='fav'?fav.includes(String(i.id)):i.type===filter)) && (!genre||i.genre===genre) && (!q || (i.title+' '+(i.genre||'')).toLowerCase().includes(q)));
+  if (sort==='title') list.sort((a,b)=>a.title.localeCompare(b.title,'ar'));
+  if (sort==='year') list.sort((a,b)=>(b.year||0)-(a.year||0));
+  const gs=[...new Set(items.map(i=>i.genre).filter(Boolean))];
+  $('#chips').innerHTML = gs.length ? `<button class="chip" data-g="" aria-pressed="${!genre}">الكل</button>`+gs.map(g=>`<button class="chip" data-g="${esc(g)}" aria-pressed="${genre===g}">${esc(g)}</button>`).join('')+'<select id="sortSel" aria-label="الترتيب"><option value="new">الأحدث</option><option value="year">السنة</option><option value="title">الاسم</option></select>' : '';
+  if ($('#sortSel')) $('#sortSel').value = sort;
+  const cont = items.filter(i=>{const p=prog[i.id];return p&&p.d&&p.t>10&&p.t<p.d-30}).sort((a,b)=>prog[b.id].at-prog[a.id].at);
+  $('#cont').innerHTML = cont.length && filter==='all' && !q ? `<h2 class="rowt">أكمل المشاهدة</h2><div class="strip">${cont.map(cardHTML).join('')}</div>` : '';
+  $('#grid').innerHTML = list.length ? list.map(cardHTML).join('')
+    : filter==='fav' ? '<p class="empty">لا توجد أعمال في مفضلتك بعد. اضغط ♡ على أي عمل لحفظه هنا.</p>'
+    : '<p class="empty">لا توجد نتائج. جرّب كلمة بحث أخرى أو ارفع أول عمل.</p>';
+}
+function renderHero(){
+  const it = items.find(i=>i.poster_url) || items[0], h = $('#hero');
+  if (!it){ h.style.backgroundImage=''; h.innerHTML='<div class="hc"><h1>شاهد أفلامك ومسلسلاتك، وارفع محتواك الخاص</h1><p>أنشئ حسابًا مجانيًا لتتمكن من رفع الأفلام والمسلسلات ومشاركتها مع الجميع.</p><button class="btn big" id="heroUpload">ارفع عملك الأول</button></div>'; return; }
+  h.style.backgroundImage = it.poster_url ? `url("${String(it.poster_url).replace(/"/g,'%22')}")` : posterStyle(it,0).replace('background-image:','');
+  h.innerHTML = `<div class="hc"><h1>${esc(it.title)}</h1><div class="meta2">${esc([TL[it.type]||'فيلم',it.genre,it.year].filter(Boolean).join(' • '))}</div><p>${esc(it.description||'')}</p><div class="acts"><button class="btn big" data-play="${esc(it.id)}">▶ شاهد الآن</button><button class="btn alt big" id="heroUpload">ارفع عملك</button></div></div>`;
 }
 async function load(){
+  if (!cloud){ items=[]; $('#demoBanner').hidden=false; render(); renderHero(); return; }
   const {data, error} = await sb.from('videos').select('*').order('created_at',{ascending:false}).limit(300);
-  items = (cloud ? [] : DEMO).concat(error ? [] : data);
-  $('#demoBanner').hidden = cloud; render();
+  items = error ? [] : (data||[]);
+  $('#demoBanner').hidden = true; render(); renderHero(); openHash();
 }
 function renderUser(){
   $('#userBox').innerHTML = user ? '<button class="btn" id="upBtn">رفع</button>' : '<button class="btn" id="inBtn">تسجيل الدخول</button>';
@@ -217,19 +272,18 @@ function renderUser(){
     : '<button class="nav" id="inBtn2">تسجيل الدخول</button><div class="sep"></div>';
 }
 async function checkAdmin(){
-  if (!user) return isAdmin = false;
-  if (!cloud){ const {data} = await sb.auth.getSession(); return isAdmin = !!data.session?.user.is_admin; }
+  if (!user || !cloud) return isAdmin = false;
   const {data} = await sb.from('admins').select('user_id').eq('user_id', user.id);
   return isAdmin = !!(data && data.length);
 }
 async function refreshUser(){ await checkAdmin(); renderUser(); }
 async function getSettings(){
-  if (cloud){ const {data} = await sb.from('settings').select('*').eq('id',1); return (data && data[0]) || {}; }
-  try { return JSON.parse(localStorage.getItem('cc_settings') || '{}'); } catch { return {}; }
+  if (!cloud) return {};
+  const {data} = await sb.from('settings').select('*').eq('id',1); return (data && data[0]) || {};
 }
 async function saveSettings(v){
-  if (cloud){ const {error} = await sb.from('settings').upsert({id:1, ...v}); return error; }
-  try { localStorage.setItem('cc_settings', JSON.stringify(v)); return null; } catch(e){ return e; }
+  if (!cloud) return {message:'قاعدة البيانات غير مربوطة'};
+  const {error} = await sb.from('settings').upsert({id:1, ...v}); return error;
 }
 async function openContact(){
   const c = await getSettings(), L = [];
@@ -269,52 +323,11 @@ async function openAdmin(){
   const vids = items.filter(i => i.user_id);
   let users = [];
   if (cloud){ const {data} = await sb.from('profiles').select('*').order('created_at',{ascending:false}).limit(500); users = data || []; }
-  else { try { users = JSON.parse(localStorage.getItem('cc_users')||'[]'); } catch {} }
   const st = [['الأعمال',vids.length],['الأفلام',vids.filter(v=>v.type==='movie').length],['المسلسلات',vids.filter(v=>v.type==='series').length],['المستخدمون',users.length]];
   $('#stats').innerHTML = st.map(([a,b])=>`<div class="stat"><b>${b}</b><br><small>${a}</small></div>`).join('');
   $('#admVids').innerHTML = vids.map(v=>`<div class="ep"><span>${esc(v.title)}${v.type==='series'?` (م${esc(v.season||1)} ح${esc(v.episode||1)})`:''} <small style="color:var(--mute)">– ${esc(v.uploader_name||'')}</small></span><button class="btn danger" data-adel="${esc(v.id)}">حذف</button></div>`).join('') || '<p class="empty">لا توجد أعمال مرفوعة بعد.</p>';
   $('#admUsers').innerHTML = users.map(u=>`<div class="ep"><span>${esc(u.name||u.email)}</span><small style="color:var(--mute)">${esc(u.email)}</small></div>`).join('');
   open('#admModal');
-}
-// وضع التجربة المحلي: يحاكي Supabase داخل المتصفح (للتجربة فقط، كلمات المرور غير مشفّرة)
-function localSb(){
-  const mem = {}, K='cc_users', V='cc_videos', S='cc_session';
-  const get = (k,d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return mem[k] ?? d; } };
-  const set = (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { mem[k] = v; } };
-  const del = k => { try { localStorage.removeItem(k); } catch { delete mem[k]; } };
-  const idb = () => new Promise((res,rej)=>{ const r = indexedDB.open('cc',1); r.onupgradeneeded = () => r.result.createObjectStore('f'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
-  const tx = async (m, fn) => { const d = await idb(); return new Promise((res,rej)=>{ const t = d.transaction('f',m), q = fn(t.objectStore('f')); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error); }); };
-  const pub = u => ({id:u.id, email:u.email, is_admin:u.is_admin, user_metadata:{name:u.name}});
-  const login = u => { set(S,u.id); const user = pub(u); return {data:{user, session:{user}}, error:null}; };
-  return {
-    auth:{
-      getSession: async () => { const u = get(K,[]).find(x => x.id === get(S,null)); return {data:{session: u ? {user:pub(u)} : null}}; },
-      onAuthStateChange(){},
-      signOut: async () => del(S),
-      signUp: async ({email,password,options}) => {
-        const us = get(K,[]);
-        if (us.some(x => x.email === email)) return {data:{}, error:{message:'هذا البريد مسجّل مسبقًا'}};
-        if (!email || password.length < 6) return {data:{}, error:{message:'أدخل بريدًا صحيحًا وكلمة مرور من 6 أحرف على الأقل'}};
-        const u = {id:crypto.randomUUID(), email, password, name:options?.data?.name || email.split('@')[0], is_admin:us.length===0, created_at:new Date().toISOString()};
-        us.push(u); set(K,us); return login(u);
-      },
-      signInWithPassword: async ({email,password}) => { const u = get(K,[]).find(x => x.email===email && x.password===password); return u ? login(u) : {data:{}, error:{message:'بيانات الدخول غير صحيحة'}}; }
-    },
-    from: () => ({
-      select: () => ({order: () => ({limit: async () => {
-        const rows = get(V,[]);
-        for (const r of rows) for (const f of ['video_url','poster_url']) if (r[f]?.startsWith('idb:')) { const b = await tx('readonly', st => st.get(r[f].slice(4))); r[f] = b ? URL.createObjectURL(b) : null; }
-        return {data:rows};
-      }})}),
-      insert: async r => { set(V,[{...r, id:crypto.randomUUID(), created_at:new Date().toISOString()}, ...get(V,[])]); return {error:null}; },
-      delete: () => ({eq: async (_,id) => { set(V, get(V,[]).filter(x => x.id !== id)); return {error:null}; }})
-    }),
-    storage:{from: () => ({
-      upload: async (path,f) => { try { await tx('readwrite', st => st.put(f,path)); return {error:null}; } catch(e){ return {error:{message:'المتصفح لا يسمح بحفظ الملفات هنا، شغّل الموقع من خادم أو GitHub Pages'}}; } },
-      getPublicUrl: p => ({data:{publicUrl:'idb:'+p}}),
-      remove: async ps => { for (const p of ps) await tx('readwrite', st => st.delete(p)); return {error:null}; }
-    })}
-  };
 }
 let currentEps = [];
 function openItem(it){
@@ -332,7 +345,7 @@ function openItem(it){
   $('#dlAll').hidden = currentEps.length < 2;
   $('#dlAll').textContent = `تنزيل المسلسل كامل (${currentEps.length} حلقة)`;
   $('#delBtn').hidden = !(user && it.user_id && (it.user_id === user.id || isAdmin));
-  open('#playerModal'); $('#player').play().catch(()=>{});
+  open('#playerModal'); const pr=prog[it.id]; resumeAt = pr&&pr.t>10&&pr.t<pr.d-30 ? pr.t : 0; syncFav(); $('#player').play().catch(()=>{});
 }
 function fileName(it){
   const ext = (it.video_url.split('?')[0].match(/\.(\w{2,4})$/)||[])[1] || 'mp4';
@@ -351,11 +364,24 @@ async function dl(it){
 async function dlAll(){
   for (const e of currentEps){ await dl(e); await new Promise(r => setTimeout(r, 1500)); }
 }
-const open = id => $(id).classList.add('open');
-const close = el => { el.classList.remove('open'); const v=$('#player'); if(el.id==='playerModal'){v.pause();v.removeAttribute('src');v.load();} };
+const open = id => { const m=$(id); lastFocus=document.activeElement; m.classList.add('open'); m.querySelector('input:not([type=file]),select,button')?.focus(); };
+const close = el => { el.classList.remove('open'); const v=$('#player'); if(el.id==='playerModal'){v.pause();v.removeAttribute('src');v.load();} lastFocus?.focus?.(); };
 
 document.addEventListener('click', async e => {
   const t = e.target;
+  const fv = t.closest('[data-fav]'); if (fv) return toggleFav(fv.dataset.fav);
+  const gc = t.closest('[data-g]'); if (gc){ genre = gc.dataset.g; return render(); }
+  const pl = t.closest('[data-play]'); if (pl) return openItem(items.find(i => String(i.id)===pl.dataset.play));
+  if (t.closest('[data-search]')){ scrollTo(0,0); return $('#q').focus(); }
+  if (t.id==='favBtn') return current && toggleFav(current.id);
+  if (t.id==='legalBtn') return open('#legalModal');
+  if (t.id==='shBtn') return navigator.clipboard?.writeText(location.href.split('#')[0]+'#w='+encodeURIComponent(current.id)).then(()=>toast('تم نسخ رابط المشاهدة'),()=>toast('تعذّر النسخ'));
+  if (t.id==='repBtn'){
+    const r = prompt('ما سبب الإبلاغ؟ (حقوق نشر، محتوى مسيء، أخرى)'); if (!r||!current) return;
+    if (!cloud) return toast('البلاغات تصل للمدير بعد تفعيل Supabase.');
+    const {error} = await sb.from('reports').insert({video_id:String(current.id), reason:r.slice(0,300)});
+    return toast(error ? 'تعذّر إرسال البلاغ، حاول لاحقًا.' : 'وصلنا بلاغك. شكرًا لك.');
+  }
   if (t.closest('.side button') || t.id==='scrim') closeSide();
   if (t.closest('[data-close]')) return close(t.closest('.modal'));
   if (t.classList.contains('modal')) return close(t);
@@ -387,7 +413,7 @@ document.addEventListener('click', async e => {
   if (t.id==='admBtn') return openAdmin();
   const ad = t.closest('[data-adel]');
   if (ad){ const it = items.find(i => String(i.id)===ad.dataset.adel); if(it && confirm('حذف «'+it.title+'» نهائيًا؟') && await removeItem(it)){ await load(); openAdmin(); } }
-  if (t.id==='heroUpload'){ if(!live) return alert('فعّل Supabase أولًا (راجع README) لتتمكن من الرفع.'); if(!user){ setAuthMode(true); open('#authModal'); } else open('#uploadModal'); }
+  if (t.id==='heroUpload'){ if(!cloud) return alert('اربط الموقع بقاعدة البيانات أولًا في config.js.'); if(!user){ setAuthMode(true); open('#authModal'); } else open('#uploadModal'); }
   if (t.id==='delBtn'){
     if(!confirm('هل تريد حذف هذا العمل نهائيًا؟')) return;
     if (await removeItem(current)){ close($('#playerModal')); load(); }
@@ -402,11 +428,11 @@ function setAuthMode(s){
   $('#nameWrap').hidden = !s;
   $('#authGo').textContent = s ? 'إنشاء الحساب' : 'دخول';
   $('#authSwap').textContent = s ? 'لدي حساب بالفعل' : 'إنشاء حساب جديد';
-  $('#authMsg').textContent = live ? '' : 'الحسابات غير مفعّلة بعد. أضف إعدادات Supabase في config.js.';
+  $('#authMsg').textContent = cloud ? '' : 'الحسابات غير مفعّلة بعد. أضف إعدادات Supabase في config.js.';
 }
 $('#authSwap').onclick = () => setAuthMode(!signup);
 $('#authGo').onclick = async () => {
-  if (!live) return;
+  if (!cloud) return;
   const email = $('#aEmail').value.trim(), password = $('#aPass').value, msg = $('#authMsg');
   msg.textContent = 'جارٍ المعالجة...';
   const res = signup
@@ -419,8 +445,11 @@ $('#authGo').onclick = async () => {
 
 $('#upGo').onclick = async () => {
   const msg = $('#upMsg'), title = $('#uTitle').value.trim(), vid = $('#uVideo').files[0], pos = $('#uPoster').files[0];
+  if (!cloud) return msg.textContent = 'قاعدة البيانات غير مربوطة.';
   if (!title || !vid) return msg.textContent = 'أدخل العنوان واختر ملف الفيديو.';
-  $('#upGo').disabled = true; msg.textContent = 'جارٍ الرفع... قد يستغرق ذلك بعض الوقت للملفات الكبيرة.';
+  if (!$('#uRights').checked) return msg.textContent = 'يلزم الإقرار بملكية الحقوق قبل الرفع.';
+  if (vid.size > 1024*1024*1024) return msg.textContent = 'حجم الفيديو أكبر من 1 جيجابايت. اضغطه أولًا ثم أعد المحاولة.';
+  $('#upGo').disabled = true; $('#upProg').hidden = false; msg.textContent = 'جارٍ الرفع... قد يستغرق ذلك بعض الوقت للملفات الكبيرة.';
   try {
     const put = async f => {
       const path = `${user.id}/${Date.now()}-${f.name.replace(/[^\w.\-]/g,'_')}`;
@@ -441,11 +470,33 @@ $('#upGo').onclick = async () => {
     ['#uTitle','#uGenre','#uYear','#uDesc','#uVideo','#uPoster'].forEach(s=>$(s).value='');
     close($('#uploadModal')); load();
   } catch(err){ msg.textContent = 'فشل الرفع: ' + (err.message||err); }
-  $('#upGo').disabled = false;
+  $('#upGo').disabled = false; $('#upProg').hidden = true;
 };
 
+const ls=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}, sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+var fav=ls('cc_fav',[]), prog=ls('cc_prog',{}), genre='', sort='new', resumeAt=0, hashDone=false, lastFocus=null, lastSave=0;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2600)}
+function syncFav(){const b=$('#favBtn');if(b&&current)b.textContent=fav.includes(String(current.id))?'♥ في المفضلة':'♡ المفضلة'}
+function toggleFav(id){id=String(id);fav=fav.includes(id)?fav.filter(x=>x!==id):[...fav,id];sv('cc_fav',fav);render();syncFav()}
+function openHash(){if(hashDone)return;hashDone=true;const m=location.hash.match(/^#w=(.+)$/),it=m&&items.find(i=>String(i.id)===decodeURIComponent(m[1]));if(it)openItem(it)}
+document.addEventListener('change',e=>{if(e.target.id==='sortSel'){sort=e.target.value;render()}});
+const pv=$('#player');
+pv.addEventListener('loadedmetadata',()=>{if(resumeAt){pv.currentTime=resumeAt;resumeAt=0}});
+pv.addEventListener('timeupdate',()=>{if(!current||!pv.duration||Date.now()-lastSave<4000)return;lastSave=Date.now();prog[current.id]={t:pv.currentTime,d:pv.duration,at:lastSave};sv('cc_prog',prog)});
+pv.addEventListener('ended',()=>{if(!current)return;delete prog[current.id];sv('cc_prog',prog);const i=currentEps.findIndex(e=>e.id===current.id),n=currentEps[i+1];if(n){toast('الحلقة التالية بعد لحظات…');setTimeout(()=>$('#playerModal').classList.contains('open')&&openItem(n),2500)}});
+addEventListener('keydown',e=>{
+  if(e.key==='Escape'){const m=document.querySelector('.modal.open');if(m)close(m);else closeSide();return}
+  if(!$('#playerModal').classList.contains('open')||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+  if(e.key==='j')pv.currentTime-=10;if(e.key==='l')pv.currentTime+=10;if(e.key==='f')pv.requestFullscreen?.();
+});
+$('#showPw').onchange=e=>$('#aPass').type=e.target.checked?'text':'password';
+$('#forgot').onclick=async()=>{const em=$('#aEmail').value.trim(),m=$('#authMsg');
+  if(!em)return m.textContent='اكتب بريدك أولًا ثم اضغط «نسيت كلمة المرور؟».';
+  if(!cloud)return m.textContent='قاعدة البيانات غير مربوطة بعد.';
+  const {error}=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.href.split('#')[0]});
+  m.textContent=error?'تعذّر الإرسال: '+error.message:'أرسلنا رابط استعادة كلمة المرور إلى بريدك.'};
 (async () => {
-  if (live){
+  if (cloud){
     const {data} = await sb.auth.getSession(); user = data.session?.user || null;
     sb.auth.onAuthStateChange((_e, s) => { user = s?.user || null; refreshUser(); });
   }
