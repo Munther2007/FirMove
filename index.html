@@ -118,7 +118,7 @@ footer{padding:24px 5vw 40px;color:var(--mute);font-size:.85rem;border-top:1px s
 <div class="banner" id="demoBanner" hidden>الموقع غير مربوط بقاعدة البيانات بعد. أضف إعدادات Supabase في ملف config.js.</div>
 
 <main><h2 id="secTitle" style="margin:0 0 6px">كل الأعمال</h2><p id="secNote" style="color:var(--mute);margin-bottom:14px"></p><div class="grid" id="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></main>
-<footer>© سينما كلاود. المحتوى المرفوع مسؤولية رافعه. <button class="linkbtn" id="legalBtn">الشروط وحقوق النشر</button></footer>
+<footer>© سينما كلاود. المحتوى المرفوع مسؤولية رافعه. <button class="linkbtn" id="legalBtn">الشروط وحقوق النشر</button> <button class="linkbtn" data-cmp>أبلغ عن مشكلة</button></footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="modal" id="legalModal" role="dialog" aria-modal="true" aria-label="الشروط"><div class="box sm">
@@ -127,6 +127,13 @@ footer{padding:24px 5vw 40px;color:var(--mute);font-size:.85rem;border-top:1px s
   <p style="margin-top:8px">يحق للإدارة حذف أي عمل مخالف. للإبلاغ عن مخالفة استخدم زر «إبلاغ» داخل صفحة المشاهدة أو «التواصل معنا».</p>
   <p style="margin-top:8px">نحفظ اسمك وبريدك لإدارة الحساب فقط. المفضلة وموضع المشاهدة يُحفظان في متصفحك.</p>
   <div class="actions"><button class="btn alt" data-close>إغلاق</button></div>
+</div></div>
+<div class="modal" id="cmpModal" role="dialog" aria-modal="true" aria-label="شكوى"><div class="box sm">
+  <h2>أبلغ عن مشكلة</h2>
+  <label for="cmpText">اكتب مشكلتك أو سجّلها بصوتك</label>
+  <textarea id="cmpText" rows="5" maxlength="1000" placeholder="مثال: الفيديو لا يعمل على جهازي"></textarea>
+  <div class="msg" id="cmpMsg"></div>
+  <div class="actions"><button class="btn" id="cmpSend">إرسال</button><button class="btn alt" id="micBtn" type="button">🎤 تسجيل صوتي</button><button class="btn alt" data-close>إلغاء</button></div>
 </div></div>
 <div class="scrim" id="scrim"></div>
 <nav class="side" id="side" aria-label="القائمة الرئيسية">
@@ -139,6 +146,7 @@ footer{padding:24px 5vw 40px;color:var(--mute);font-size:.85rem;border-top:1px s
   <button class="nav" data-f="fav" aria-pressed="false">مفضلتي</button>
   <div class="sep"></div>
   <button class="nav" id="contactBtn">التواصل معنا</button>
+  <button class="nav" data-cmp>شكوى أو مشكلة</button>
 </nav>
 
 <div class="modal" id="contactModal" role="dialog" aria-modal="true"><div class="box sm">
@@ -212,6 +220,7 @@ footer{padding:24px 5vw 40px;color:var(--mute);font-size:.85rem;border-top:1px s
   <div class="row" id="stats"></div>
   <h3 style="margin:16px 0 4px">الأعمال المرفوعة</h3><div class="eps" id="admVids" style="max-height:260px"></div>
   <h3 style="margin:16px 0 4px">المستخدمون</h3><div class="eps" id="admUsers" style="max-height:200px"></div>
+  <h3 style="margin:16px 0 4px">الشكاوى</h3><div class="eps" id="admCmp" style="max-height:240px"></div>
   <div class="actions"><button class="btn alt" data-close>إغلاق</button></div>
 </div></div>
 
@@ -330,6 +339,8 @@ async function openAdmin(){
   $('#stats').innerHTML = st.map(([a,b])=>`<div class="stat"><b>${b}</b><br><small>${a}</small></div>`).join('');
   $('#admVids').innerHTML = vids.map(v=>`<div class="ep"><span>${esc(v.title)}${v.type==='series'?` (م${esc(v.season||1)} ح${esc(v.episode||1)})`:''} <small style="color:var(--mute)">– ${esc(v.uploader_name||'')}</small></span><button class="btn danger" data-adel="${esc(v.id)}">حذف</button></div>`).join('') || '<p class="empty">لا توجد أعمال مرفوعة بعد.</p>';
   $('#admUsers').innerHTML = users.map(u=>`<div class="ep"><span>${esc(u.name||u.email)}</span><small style="color:var(--mute)">${esc(u.email)}</small></div>`).join('');
+  let cm = []; if (cloud){ const {data} = await sb.from('complaints').select('*').order('created_at',{ascending:false}).limit(100); cm = data || []; }
+  $('#admCmp').innerHTML = cm.map(c=>`<div class="ep"><span>${esc(c.message)} <small style="color:var(--mute)">– ${esc(fmtDate(c.created_at))}</small></span><button class="btn danger" data-cdel="${esc(c.id)}">حذف</button></div>`).join('') || '<p class="empty">لا توجد شكاوى.</p>';
   open('#admModal');
 }
 let currentEps = [];
@@ -508,6 +519,29 @@ pv.addEventListener('play',()=>{
   sb.rpc('add_view',{vid:current.id}).then(()=>{},()=>{});
 });
 $('#gBtn').onclick=async()=>{if(!cloud)return;const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href.split('#')[0]}});if(error)$('#authMsg').textContent='تعذّر الدخول عبر Google: '+error.message};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition; let rec=null;
+document.addEventListener('click',async e=>{
+  const t=e.target;
+  if(t.closest('[data-cmp]')){$('#cmpMsg').textContent='';return open('#cmpModal')}
+  const cd=t.closest('[data-cdel]');if(cd&&cloud){await sb.from('complaints').delete().eq('id',cd.dataset.cdel);openAdmin()}
+});
+$('#micBtn').onclick=()=>{
+  if(!SR)return $('#cmpMsg').textContent='متصفحك لا يدعم التسجيل الصوتي. اكتب مشكلتك بدلًا من ذلك.';
+  if(rec){rec.stop();return}
+  rec=new SR();rec.lang='ar';rec.continuous=true;rec.interimResults=false;
+  rec.onresult=ev=>{let x='';for(let i=ev.resultIndex;i<ev.results.length;i++)if(ev.results[i].isFinal)x+=ev.results[i][0].transcript+' ';$('#cmpText').value=($('#cmpText').value+' '+x).trim().slice(0,1000)};
+  rec.onerror=()=>{$('#cmpMsg').textContent='تعذّر التسجيل. اسمح للمتصفح باستخدام الميكروفون ثم أعد المحاولة.'};
+  rec.onend=()=>{rec=null;$('#micBtn').textContent='🎤 تسجيل صوتي'};
+  rec.start();$('#micBtn').textContent='⏹ إيقاف التسجيل';
+};
+$('#cmpSend').onclick=async()=>{
+  const m=$('#cmpText').value.trim(),msg=$('#cmpMsg');
+  if(m.length<5)return msg.textContent='اكتب وصفًا أوضح للمشكلة.';
+  if(!cloud)return msg.textContent='قاعدة البيانات غير مربوطة.';
+  const {error}=await sb.from('complaints').insert({message:m,page:location.href.slice(0,300),agent:navigator.userAgent.slice(0,200),user_id:user?user.id:null});
+  if(error)return msg.textContent='تعذّر الإرسال، حاول لاحقًا.';
+  $('#cmpText').value='';close($('#cmpModal'));toast('وصلتنا شكواك. شكرًا لك.');
+};
 (async () => {
   if (cloud){
     const {data} = await sb.auth.getSession(); user = data.session?.user || null;
