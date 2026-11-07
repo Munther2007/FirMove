@@ -85,6 +85,7 @@ h1,h2,.logo{font-family:'Reem Kufi','Readex Pro',sans-serif}
 .card .open{display:block;width:100%;background:none;border:0;padding:0;text-align:start;cursor:pointer}
 .fav{position:absolute;top:8px;inset-inline-start:8px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(21,17,31,.75);color:var(--gold);font-size:1.2rem;cursor:pointer}
 .fav[aria-pressed=true]{color:var(--rose)}
+.sub{display:block;margin-top:2px;font-size:.78rem}
 .pbar{height:4px;background:var(--line)}.pbar i{display:block;height:100%;background:var(--gold)}
 .sk{aspect-ratio:2/3;border-radius:10px;background:var(--card)}
 @media (prefers-reduced-motion:no-preference){.sk{animation:sh 1.2s ease-in-out infinite alternate}@keyframes sh{to{opacity:.45}}}
@@ -162,6 +163,7 @@ footer{padding:24px 5vw 40px;color:var(--mute);font-size:.85rem;border-top:1px s
 <!-- نافذة المشاهدة -->
 <div class="modal" id="playerModal" role="dialog" aria-modal="true"><div class="box">
   <video id="player" controls playsinline preload="metadata"></video>
+  <p class="msg" id="vidWarn" hidden>هذا الفيديو بصيغة لا يدعمها متصفحك (غالبًا H.265)، ولذلك يظهر الصوت بدون صورة. يجب تحويله إلى MP4 بترميز H.264 ثم إعادة رفعه.</p>
   <h2 id="pTitle" style="margin-top:14px"></h2>
   <p id="pMeta" style="color:var(--mute)"></p>
   <p id="pDesc" style="margin-top:8px"></p>
@@ -178,6 +180,7 @@ footer{padding:24px 5vw 40px;color:var(--mute);font-size:.85rem;border-top:1px s
   <label class="chk"><input type="checkbox" id="showPw"> إظهار كلمة المرور</label><button class="linkbtn" id="forgot" type="button">نسيت كلمة المرور؟</button>
   <div class="msg" id="authMsg"></div>
   <div class="actions"><button class="btn" id="authGo">دخول</button><button class="btn alt" id="authSwap">إنشاء حساب جديد</button><button class="btn alt" data-close>إلغاء</button></div>
+  <div class="sep"></div><button class="btn alt" id="gBtn" style="width:100%">المتابعة عبر Google</button>
 </div></div>
 
 <!-- نافذة الرفع -->
@@ -196,7 +199,7 @@ footer{padding:24px 5vw 40px;color:var(--mute);font-size:.85rem;border-top:1px s
   <label for="uDesc">الوصف</label><textarea id="uDesc" rows="3"></textarea>
   <div class="row">
     <div><label for="uPoster">صورة الغلاف</label><input id="uPoster" type="file" accept="image/*"></div>
-    <div><label for="uVideo">ملف الفيديو</label><input id="uVideo" type="file" accept="video/*"></div>
+    <div><label for="uVideo">ملف الفيديو</label><input id="uVideo" type="file" accept="video/*"><small style="color:var(--mute)">يفضّل MP4 بترميز H.264 وصوت AAC ليعمل على كل الأجهزة.</small></div>
   </div>
   <label class="chk"><input type="checkbox" id="uRights"> أقرّ بأنني أملك حقوق هذا المحتوى أو لدي إذن بنشره.</label>
   <progress id="upProg" hidden></progress>
@@ -212,7 +215,7 @@ footer{padding:24px 5vw 40px;color:var(--mute);font-size:.85rem;border-top:1px s
   <div class="actions"><button class="btn alt" data-close>إغلاق</button></div>
 </div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" onerror="document.write('<script src=&quot;https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js&quot;><\/script>')"></script>
 <script src="config.js"></script>
 <script>
 const $ = s => document.querySelector(s);
@@ -234,7 +237,7 @@ function posterStyle(it, i){
 }
 function cardHTML(it,i){
   const pr=prog[it.id], pc=pr&&pr.d?Math.min(100,pr.t/pr.d*100):0, f=fav.includes(String(it.id));
-  return `<div class="card" data-id="${esc(it.id)}"><button class="open"><div class="poster" style="${posterStyle(it,i)}">${it.poster_url?'':esc(it.title)}</div>${pc>2?`<div class="pbar"><i style="width:${pc}%"></i></div>`:''}<div class="meta"><h3>${esc(it.title)}</h3><small>${it.type==='series'?`مسلسل${it.season?` – م${esc(it.season)} ح${esc(it.episode)}`:''}`:(TL[it.type]||'فيلم')}${it.year?' • '+esc(it.year):''}</small></div></button><button class="fav" data-fav="${esc(it.id)}" aria-pressed="${f}" aria-label="${f?'إزالة من المفضلة':'إضافة إلى المفضلة'}">${f?'♥':'♡'}</button></div>`;
+  return `<div class="card" data-id="${esc(it.id)}"><button class="open"><div class="poster" style="${posterStyle(it,i)}">${it.poster_url?'':esc(it.title)}</div>${pc>2?`<div class="pbar"><i style="width:${pc}%"></i></div>`:''}<div class="meta"><h3>${esc(it.title)}</h3><small>${it.type==='series'?`مسلسل${it.season?` – م${esc(it.season)} ح${esc(it.episode)}`:''}`:(TL[it.type]||'فيلم')}${it.year?' • '+esc(it.year):''}</small><small class="sub">${esc(subline(it))}</small></div></button><button class="fav" data-fav="${esc(it.id)}" aria-pressed="${f}" aria-label="${f?'إزالة من المفضلة':'إضافة إلى المفضلة'}">${f?'♥':'♡'}</button></div>`;
 }
 function render(){
   const q = $('#q').value.trim().toLowerCase();
@@ -264,7 +267,7 @@ async function load(){
 }
 function renderUser(){
   $('#userBox').innerHTML = user ? '<button class="btn" id="upBtn">رفع</button>' : '<button class="btn" id="inBtn">تسجيل الدخول</button>';
-  const nm = user ? String(user.user_metadata?.name || user.email) : '';
+  const nm = user ? String((user.user_metadata?.name||user.user_metadata?.full_name) || user.email) : '';
   $('#sideUser').innerHTML = user
     ? `<button class="nav prof" id="profBtn"><span class="av">${esc(nm.trim()[0]||'?')}</span><span>${esc(nm)}<br><small style="color:var(--mute)">${isAdmin?'مدير':'عضو'}</small></span></button>`
       + (isAdmin ? '<button class="nav" id="admBtn">لوحة المدير</button><button class="nav" id="setBtn">الإعدادات</button><div class="sep"></div>' : '')
@@ -306,7 +309,7 @@ $('#setGo').onclick = async () => {
   $('#setMsg').textContent = err ? 'تعذّر الحفظ: ' + (err.message||err) : 'تم حفظ الإعدادات.';
 };
 function openProfile(){
-  const nm = user.user_metadata?.name || user.email, mine = items.filter(i => i.user_id === user.id);
+  const nm = (user.user_metadata?.name||user.user_metadata?.full_name) || user.email, mine = items.filter(i => i.user_id === user.id);
   $('#profBox').innerHTML = `<p><b>${esc(nm)}</b></p><p style="color:var(--mute)">${esc(user.email)} • ${isAdmin?'مدير':'عضو'}</p><h3 style="margin:14px 0 4px">أعمالي (${mine.length})</h3><div class="eps">`
     + (mine.map(v=>`<div class="ep"><button class="epPlay" data-ep="${esc(v.id)}">${esc(v.title)}</button><button class="btn danger" data-mdel="${esc(v.id)}">حذف</button></div>`).join('') || '<p class="empty">لم ترفع أي عمل بعد.</p>') + '</div>';
   open('#profModal');
@@ -335,7 +338,7 @@ function openItem(it){
   current = it;
   $('#player').src = it.video_url;
   $('#pTitle').textContent = it.title;
-  $('#pMeta').textContent = [TL[it.type]||'فيلم', it.genre, it.year, it.uploader_name&&('رفع بواسطة '+it.uploader_name)].filter(Boolean).join(' • ');
+  $('#pMeta').textContent = [TL[it.type]||'فيلم', it.genre, it.year, it.created_at&&('رُفع '+fmtDate(it.created_at)), (it.views||0)+' مشاهدة', it.uploader_name&&('بواسطة '+it.uploader_name)].filter(Boolean).join(' • ');
   $('#pDesc').textContent = it.description || '';
   currentEps = it.type==='series'
     ? items.filter(x => x.type==='series' && x.title===it.title).sort((a,b)=>(a.season||1)-(b.season||1)||(a.episode||1)-(b.episode||1))
@@ -463,7 +466,7 @@ $('#upGo').onclick = async () => {
     const {error} = await sb.from('videos').insert({
       title, type:$('#uType').value, genre:$('#uGenre').value.trim(), year:+$('#uYear').value||null,
       description:$('#uDesc').value.trim(), season:isS?+$('#uSeason').value:null, episode:isS?+$('#uEp').value:null,
-      video_url, poster_url, video_path, poster_path, user_id:user.id, uploader_name:user.user_metadata?.name||user.email.split('@')[0]
+      video_url, poster_url, video_path, poster_path, user_id:user.id, uploader_name:(user.user_metadata?.name||user.user_metadata?.full_name)||user.email.split('@')[0]
     });
     if (error) throw error;
     msg.textContent = 'تم الرفع بنجاح.';
@@ -495,6 +498,16 @@ $('#forgot').onclick=async()=>{const em=$('#aEmail').value.trim(),m=$('#authMsg'
   if(!cloud)return m.textContent='قاعدة البيانات غير مربوطة بعد.';
   const {error}=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.href.split('#')[0]});
   m.textContent=error?'تعذّر الإرسال: '+error.message:'أرسلنا رابط استعادة كلمة المرور إلى بريدك.'};
+const fmtDate=d=>{try{return new Date(d).toLocaleDateString('ar-u-nu-latn',{year:'numeric',month:'short',day:'numeric'})}catch{return ''}};
+const subline=it=>[(it.views||0)+' مشاهدة',it.created_at&&fmtDate(it.created_at)].filter(Boolean).join(' • ');
+pv.addEventListener('loadeddata',()=>{$('#vidWarn').hidden=pv.videoWidth>0});
+pv.addEventListener('error',()=>{if(pv.getAttribute('src'))$('#vidWarn').hidden=false});
+pv.addEventListener('play',()=>{
+  if(!current||!cloud)return;const id=String(current.id),seen=ls('cc_seen',[]);if(seen.includes(id))return;
+  seen.push(id);sv('cc_seen',seen);current.views=(current.views||0)+1;render();
+  sb.rpc('add_view',{vid:current.id}).then(()=>{},()=>{});
+});
+$('#gBtn').onclick=async()=>{if(!cloud)return;const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href.split('#')[0]}});if(error)$('#authMsg').textContent='تعذّر الدخول عبر Google: '+error.message};
 (async () => {
   if (cloud){
     const {data} = await sb.auth.getSession(); user = data.session?.user || null;
